@@ -13,9 +13,7 @@ namespace Chess.Models
 
         public override string ToString()
         {
-            return Piece != null
-                ? Piece.ToString()
-                : " ";
+            return Piece?.ToString() ?? " ";
         }
     }
 }

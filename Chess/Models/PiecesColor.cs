@@ -12,14 +12,12 @@ namespace Chess.Models
     {
         public static PiecesColor Invert(this PiecesColor color)
         {
-            switch (color)
+            return color switch
             {
-                case PiecesColor.Black: return PiecesColor.White;
-                case PiecesColor.White: return PiecesColor.Black;
-                default:
-                    throw new ArgumentOutOfRangeException
-                        (nameof(color), color, null);
-            }
+                PiecesColor.Black => PiecesColor.White,
+                PiecesColor.White => PiecesColor.Black,
+                _ => throw new ArgumentOutOfRangeException(nameof(color), color, null)
+            };
         }
     }
 }
