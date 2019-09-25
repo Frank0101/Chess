@@ -4,9 +4,9 @@ namespace Chess.Models
 {
     public class Tile
     {
-        public Piece Piece { get; set; }
+        public Piece? Piece { get; set; }
 
-        public Tile(Piece piece)
+        public Tile(Piece? piece)
         {
             Piece = piece;
         }
