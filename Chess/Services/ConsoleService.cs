@@ -3,9 +3,9 @@ using Chess.Models;
 
 namespace Chess.Services
 {
-    public class BoardDisplayService
+    public class ConsoleService : IConsoleService
     {
-        public void DisplayBoard(Board board)
+        public void PrintBoard(Board board)
         {
             const ConsoleColor whitePiecesColor = ConsoleColor.White;
             const ConsoleColor blackPiecesColor = ConsoleColor.Black;
