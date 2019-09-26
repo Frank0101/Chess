@@ -1,25 +1,23 @@
-﻿using Chess.Domain.Enums;
-using Chess.Domain.Models;
-using Chess.Services;
+﻿using Chess.Console.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Chess
+namespace Chess.Console
 {
     public static class Program
     {
         public static void Main()
         {
-            var serviceCollection = new ServiceCollection()
+            using var serviceProvider = RegisterDependencies();
+            var application = serviceProvider.GetService<Application>();
+            application.Start();
+        }
+
+        private static ServiceProvider RegisterDependencies()
+        {
+            return new ServiceCollection()
                 .AddScoped<IConsoleService, ConsoleService>()
+                .AddScoped<Application>()
                 .BuildServiceProvider();
-
-            using (serviceCollection)
-            {
-                var consoleService = serviceCollection.GetService<IConsoleService>();
-
-                var board = new Board(PiecesColor.White);
-                consoleService.PrintBoard(board);
-            }
         }
     }
 }
