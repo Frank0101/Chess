@@ -1,3 +1,5 @@
+using Chess.Domain.Enums;
+
 namespace Chess.Domain.Models.Pieces
 {
     public class Queen : Piece

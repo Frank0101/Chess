@@ -1,3 +1,4 @@
+using Chess.Domain.Enums;
 using Chess.Domain.Models.Pieces;
 
 namespace Chess.Domain.Models

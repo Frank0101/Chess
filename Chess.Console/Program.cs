@@ -1,12 +1,13 @@
-﻿using Chess.Domain.Models;
+﻿using Chess.Domain.Enums;
+using Chess.Domain.Models;
 using Chess.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Chess
 {
-    public class Program
+    public static class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             var serviceCollection = new ServiceCollection()
                 .AddScoped<IConsoleService, ConsoleService>()

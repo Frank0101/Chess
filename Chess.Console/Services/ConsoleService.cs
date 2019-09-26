@@ -1,4 +1,5 @@
 using System;
+using Chess.Domain.Enums;
 using Chess.Domain.Models;
 
 namespace Chess.Services
