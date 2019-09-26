@@ -1,4 +1,4 @@
-namespace Chess.Models.Pieces
+namespace Chess.Domain.Models.Pieces
 {
     public class King : CastlingPiece
     {

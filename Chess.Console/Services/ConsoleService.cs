@@ -1,5 +1,5 @@
 using System;
-using Chess.Models;
+using Chess.Domain.Models;
 
 namespace Chess.Services
 {

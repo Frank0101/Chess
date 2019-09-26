@@ -1,4 +1,4 @@
-﻿using Chess.Models;
+﻿using Chess.Domain.Models;
 using Chess.Services;
 using Microsoft.Extensions.DependencyInjection;
 

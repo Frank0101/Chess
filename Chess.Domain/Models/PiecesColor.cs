@@ -1,6 +1,6 @@
 using System;
 
-namespace Chess.Models
+namespace Chess.Domain.Models
 {
     public enum PiecesColor
     {
