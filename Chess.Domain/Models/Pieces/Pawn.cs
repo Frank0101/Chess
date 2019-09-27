@@ -4,7 +4,8 @@ namespace Chess.Domain.Models.Pieces
 {
     public class Pawn : Piece
     {
-        public Pawn(PiecesColor color) : base('♙', 1, color)
+        public Pawn(PiecesColor color)
+            : base(color, color == PiecesColor.Black ? 'p' : 'P', 1)
         {
         }
     }

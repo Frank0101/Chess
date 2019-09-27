@@ -1,7 +1,7 @@
-﻿using Chess.Console.Services;
+﻿using Chess.ConsoleApp.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Chess.Console
+namespace Chess.ConsoleApp
 {
     public static class Program
     {

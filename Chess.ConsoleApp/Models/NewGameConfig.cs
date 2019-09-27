@@ -1,6 +1,6 @@
 using Chess.Domain.Enums;
 
-namespace Chess.Console.Models
+namespace Chess.ConsoleApp.Models
 {
     public class NewGameConfig
     {

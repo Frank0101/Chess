@@ -4,7 +4,8 @@ namespace Chess.Domain.Models.Pieces
 {
     public class King : CastlingPiece
     {
-        public King(PiecesColor color) : base('♔', 99, color)
+        public King(PiecesColor color)
+            : base(color, color == PiecesColor.Black ? 'k' : 'K', 99)
         {
         }
     }

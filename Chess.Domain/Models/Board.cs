@@ -1,3 +1,4 @@
+using System.Text;
 using Chess.Domain.Enums;
 using Chess.Domain.Models.Pieces;
 
@@ -9,13 +10,13 @@ namespace Chess.Domain.Models
 
         public Tile this[int row, int col] => _tiles[row, col];
 
-        public Board(PiecesColor userColor)
+        public Board()
         {
             for (var row = 0; row < 8; row++)
             {
                 var color = row < 4
-                    ? userColor.Invert()
-                    : userColor;
+                    ? PiecesColor.Black
+                    : PiecesColor.White;
 
                 switch (row)
                 {
@@ -25,18 +26,8 @@ namespace Chess.Domain.Models
                         _tiles[row, 0] = new Tile(new Rook(color));
                         _tiles[row, 1] = new Tile(new Knight(color));
                         _tiles[row, 2] = new Tile(new Bishop(color));
-
-                        if (userColor == PiecesColor.White)
-                        {
-                            _tiles[row, 3] = new Tile(new Queen(color));
-                            _tiles[row, 4] = new Tile(new King(color));
-                        }
-                        else
-                        {
-                            _tiles[row, 3] = new Tile(new King(color));
-                            _tiles[row, 4] = new Tile(new Queen(color));
-                        }
-
+                        _tiles[row, 3] = new Tile(new Queen(color));
+                        _tiles[row, 4] = new Tile(new King(color));
                         _tiles[row, 5] = new Tile(new Bishop(color));
                         _tiles[row, 6] = new Tile(new Knight(color));
                         _tiles[row, 7] = new Tile(new Rook(color));
@@ -64,6 +55,22 @@ namespace Chess.Domain.Models
                     }
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            for (var row = 0; row < 8; row++)
+            {
+                if (row > 0) sb.AppendLine();
+                for (var col = 0; col < 8; col++)
+                {
+                    sb.Append(_tiles[row, col]);
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }

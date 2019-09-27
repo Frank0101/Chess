@@ -4,8 +4,8 @@ namespace Chess.Domain.Models.Pieces
 {
     public abstract class CastlingPiece : Piece
     {
-        protected CastlingPiece(char symbol, int value, PiecesColor color)
-            : base(symbol, value, color)
+        protected CastlingPiece(PiecesColor color, char symbol, int value)
+            : base(color, symbol, value)
         {
         }
     }
