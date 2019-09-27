@@ -45,7 +45,7 @@ namespace Chess.Console.Services
         private static int GetRecursionLevelSelection() =>
             RequestKey("recursion level (3 suggested)") switch
             {
-                var key when int.TryParse(key.ToString(), out var level) => level,
+                var key when int.TryParse(key.ToString(), out var level) && level > 0 => level,
                 _ => GetRecursionLevelSelection()
             };
 
