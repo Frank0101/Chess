@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using Chess.ConsoleApp.Enums;
 using Chess.ConsoleApp.Models;
 using Chess.Domain.Enums;
@@ -40,8 +41,7 @@ namespace Chess.ConsoleApp.Services
             int RequestRecursionLevel() =>
                 RequestKey("recursion level (3 suggested)") switch
                 {
-                    var key when int.TryParse(key.ToString(), out var level)
-                                 && level > 0 => level,
+                    var key when int.TryParse(key.ToString(), out var level) && level > 0 => level,
                     _ => RequestRecursionLevel()
                 };
 
@@ -71,6 +71,8 @@ namespace Chess.ConsoleApp.Services
                 frontColor == PiecesColor.Black
                     ? 8 - counter - 1
                     : counter;
+
+            Console.WriteLine();
 
             for (var rowCounter = 0; rowCounter < 8; rowCounter++)
             {
@@ -104,6 +106,34 @@ namespace Chess.ConsoleApp.Services
                 ? "   h  g  f  e  d  c  b  a"
                 : "   a  b  c  d  e  f  g  h"
             );
+        }
+
+        public MoveSelection RequestMoveSelection(out Move? move)
+        {
+            Console.WriteLine();
+            Console.WriteLine("move: e.g. \"a1b2\"");
+            Console.WriteLine("save game: \"save\"");
+            Console.WriteLine("exit game: \"exit\"");
+
+            while (true)
+            {
+                Console.Write("command> ");
+
+                switch (Console.ReadLine() ?? "")
+                {
+                    case var moveStr when Regex.IsMatch(moveStr, "[a-h][1-8][a-h][1-8]"):
+                        move = null;
+                        return MoveSelection.Move;
+                    case "save":
+                        move = null;
+                        return MoveSelection.SaveGame;
+                    case "exit":
+                        move = null;
+                        return MoveSelection.ExitGame;
+                    default:
+                        continue;
+                }
+            }
         }
     }
 }

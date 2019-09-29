@@ -12,5 +12,11 @@ namespace Chess.ConsoleApp.Models
             UserColor = userColor;
             RecursionLevel = recursionLevel;
         }
+
+        public void Deconstruct(out PiecesColor userColor, out int recursionLevel)
+        {
+            userColor = UserColor;
+            recursionLevel = RecursionLevel;
+        }
     }
 }

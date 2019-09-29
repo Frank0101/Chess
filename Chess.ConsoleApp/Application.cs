@@ -22,10 +22,21 @@ namespace Chess.ConsoleApp
             {
                 case MainMenuSelection.NewGame:
                 {
-                    var newGameConfig = _consoleService.RequestNewGameConfig();
-                    var game = new UserVsCpuGame(newGameConfig.UserColor, newGameConfig.RecursionLevel);
+                    var (userColor, recursionLevel) = _consoleService.RequestNewGameConfig();
+                    var game = new UserVsCpuGame(userColor, recursionLevel);
 
-                    game.TurnStarted += _ => _consoleService.DisplayBoard(game.Board, game.UserPlayer.Color);
+                    game.TurnStarted += _ =>
+                        _consoleService.DisplayBoard(game.Board, game.UserPlayer.Color);
+
+                    game.UserPlayer.MoveRequested += board =>
+                        _consoleService.RequestMoveSelection(out var move) switch
+                        {
+                            MoveSelection.Move => move,
+                            MoveSelection.SaveGame => null,
+                            MoveSelection.ExitGame => null,
+                            _ => null
+                        };
+
                     game.Start();
 
                     break;

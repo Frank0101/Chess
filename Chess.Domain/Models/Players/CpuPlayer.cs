@@ -1,4 +1,3 @@
-using System;
 using Chess.Domain.Enums;
 
 namespace Chess.Domain.Models.Players
@@ -12,9 +11,9 @@ namespace Chess.Domain.Models.Players
             RecursionLevel = recursionLevel;
         }
 
-        public override bool TryMove(Board board)
+        internal override bool TryMove(Board board)
         {
-            throw new NotImplementedException();
+            return false;
         }
     }
 }
