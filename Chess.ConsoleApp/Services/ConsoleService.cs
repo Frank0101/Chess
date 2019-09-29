@@ -27,26 +27,29 @@ namespace Chess.ConsoleApp.Services
                 _ => RequestMainMenuSelection()
             };
 
-        public NewGameConfig RequestNewGameConfig() =>
-            new NewGameConfig(
+        public NewGameConfig RequestNewGameConfig()
+        {
+            PiecesColor RequestUserColor() =>
+                RequestKey("[b]lack pieces, [w]hite pieces") switch
+                {
+                    'b' => PiecesColor.Black,
+                    'w' => PiecesColor.White,
+                    _ => RequestUserColor()
+                };
+
+            int RequestRecursionLevel() =>
+                RequestKey("recursion level (3 suggested)") switch
+                {
+                    var key when int.TryParse(key.ToString(), out var level)
+                                 && level > 0 => level,
+                    _ => RequestRecursionLevel()
+                };
+
+            return new NewGameConfig(
                 RequestUserColor(),
                 RequestRecursionLevel()
             );
-
-        private static PiecesColor RequestUserColor() =>
-            RequestKey("[b]lack pieces, [w]hite pieces") switch
-            {
-                'b' => PiecesColor.Black,
-                'w' => PiecesColor.White,
-                _ => RequestUserColor()
-            };
-
-        private static int RequestRecursionLevel() =>
-            RequestKey("recursion level (3 suggested)") switch
-            {
-                var key when int.TryParse(key.ToString(), out var level) && level > 0 => level,
-                _ => RequestRecursionLevel()
-            };
+        }
 
         private static char RequestKey(string prompt)
         {
@@ -64,26 +67,31 @@ namespace Chess.ConsoleApp.Services
             const ConsoleColor blackTilesColor = ConsoleColor.DarkGray;
             const ConsoleColor whiteTilesColor = ConsoleColor.Gray;
 
-            for (var rowIndex = 0; rowIndex < 8; rowIndex++)
+            int ConvertCounterToIndex(int counter) =>
+                frontColor == PiecesColor.Black
+                    ? 8 - counter - 1
+                    : counter;
+
+            for (var rowCounter = 0; rowCounter < 8; rowCounter++)
             {
-                var row = frontColor == PiecesColor.Black ? 8 - rowIndex - 1 : rowIndex;
+                var rowIndex = ConvertCounterToIndex(rowCounter);
 
-                Console.Write($"{8 - row}  ");
+                Console.Write($"{8 - rowIndex} ");
 
-                for (var colIndex = 0; colIndex < 8; colIndex++)
+                for (var colCounter = 0; colCounter < 8; colCounter++)
                 {
-                    var col = frontColor == PiecesColor.Black ? 8 - colIndex - 1 : colIndex;
+                    var colIndex = ConvertCounterToIndex(colCounter);
 
                     Console.ForegroundColor =
-                        board[row, col].Piece?.Color == PiecesColor.Black
+                        board[rowIndex, colIndex].Piece?.Color == PiecesColor.Black
                             ? blackPiecesColor
                             : whitePiecesColor;
 
-                    Console.BackgroundColor = (row + col) % 2 == 1
+                    Console.BackgroundColor = (rowIndex + colIndex) % 2 == 1
                         ? blackTilesColor
                         : whiteTilesColor;
 
-                    Console.Write($" {board[row, col]} ");
+                    Console.Write($" {board[rowIndex, colIndex]} ");
                 }
 
                 Console.ResetColor();
