@@ -82,10 +82,12 @@ namespace Chess.ConsoleApp.Services
                 {
                     var colIndex = ConvertCounterToIndex(colCounter);
 
-                    Console.ForegroundColor =
-                        board[rowIndex, colIndex].Piece?.Color == PiecesColor.Black
+                    if (board[rowIndex, colIndex].Piece is {} piece)
+                    {
+                        Console.ForegroundColor = piece.Color == PiecesColor.Black
                             ? blackPiecesColor
                             : whitePiecesColor;
+                    }
 
                     Console.BackgroundColor = (rowIndex + colIndex) % 2 == 1
                         ? blackTilesColor
@@ -98,11 +100,10 @@ namespace Chess.ConsoleApp.Services
                 Console.WriteLine();
             }
 
-            var colsLabel = frontColor == PiecesColor.Black
-                ? "h  g  f  e  d  c  b  a"
-                : "a  b  c  d  e  f  g  h";
-
-            Console.WriteLine($"   {colsLabel}");
+            Console.WriteLine(frontColor == PiecesColor.Black
+                ? "   h  g  f  e  d  c  b  a"
+                : "   a  b  c  d  e  f  g  h"
+            );
         }
     }
 }

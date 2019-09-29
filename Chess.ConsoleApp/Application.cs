@@ -21,10 +21,13 @@ namespace Chess.ConsoleApp
             switch (_consoleService.RequestMainMenuSelection())
             {
                 case MainMenuSelection.NewGame:
+                {
                     var newGameConfig = _consoleService.RequestNewGameConfig();
                     var game = new UserVsCpuGame(newGameConfig.UserColor, newGameConfig.RecursionLevel);
                     _consoleService.DisplayBoard(game.Board, game.UserPlayer.Color);
+
                     break;
+                }
                 case MainMenuSelection.LoadGame:
                     break;
                 default:
