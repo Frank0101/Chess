@@ -24,14 +24,16 @@ namespace Chess.ConsoleApp
                 {
                     var newGameConfig = _consoleService.RequestNewGameConfig();
                     var game = new UserVsCpuGame(newGameConfig.UserColor, newGameConfig.RecursionLevel);
-                    _consoleService.DisplayBoard(game.Board, game.UserPlayer.Color);
+
+                    game.TurnStarted += _ => _consoleService.DisplayBoard(game.Board, game.UserPlayer.Color);
+                    game.Start();
 
                     break;
                 }
                 case MainMenuSelection.LoadGame:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new NotImplementedException();
             }
         }
     }

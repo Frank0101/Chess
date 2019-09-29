@@ -1,3 +1,4 @@
+using System;
 using Chess.Domain.Enums;
 
 namespace Chess.Domain.Models.Players
@@ -6,6 +7,11 @@ namespace Chess.Domain.Models.Players
     {
         public UserPlayer(PiecesColor color) : base(color)
         {
+        }
+
+        public override bool TryMove(Board board)
+        {
+            throw new NotImplementedException();
         }
     }
 }

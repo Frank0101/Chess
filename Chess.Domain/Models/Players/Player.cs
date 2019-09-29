@@ -10,5 +10,7 @@ namespace Chess.Domain.Models.Players
         {
             Color = color;
         }
+
+        public abstract bool TryMove(Board board);
     }
 }

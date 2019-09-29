@@ -1,3 +1,4 @@
+using System;
 using Chess.Domain.Enums;
 
 namespace Chess.Domain.Models.Players
@@ -9,6 +10,11 @@ namespace Chess.Domain.Models.Players
         public CpuPlayer(PiecesColor color, int recursionLevel) : base(color)
         {
             RecursionLevel = recursionLevel;
+        }
+
+        public override bool TryMove(Board board)
+        {
+            throw new NotImplementedException();
         }
     }
 }
