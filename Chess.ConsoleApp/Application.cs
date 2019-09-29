@@ -1,8 +1,7 @@
 using System;
 using Chess.ConsoleApp.Enums;
 using Chess.ConsoleApp.Services;
-using Chess.Domain.Enums;
-using Chess.Domain.Models;
+using Chess.Domain.Models.Games;
 
 namespace Chess.ConsoleApp
 {
@@ -23,17 +22,14 @@ namespace Chess.ConsoleApp
             {
                 case MainMenuSelection.NewGame:
                     var newGameConfig = _consoleService.RequestNewGameConfig();
+                    var game = new UserVsCpuGame(newGameConfig.UserColor, newGameConfig.RecursionLevel);
+                    _consoleService.DisplayBoard(game.Board, game.UserPlayer.Color);
                     break;
                 case MainMenuSelection.LoadGame:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            var board = new Board();
-            Console.WriteLine(board);
-            _consoleService.DisplayBoard(board, PiecesColor.Black);
-            _consoleService.DisplayBoard(board, PiecesColor.White);
         }
     }
 }

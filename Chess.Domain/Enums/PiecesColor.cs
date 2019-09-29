@@ -1,5 +1,3 @@
-using System;
-
 namespace Chess.Domain.Enums
 {
     public enum PiecesColor
@@ -11,11 +9,8 @@ namespace Chess.Domain.Enums
     public static class PiecesColorExtensions
     {
         public static PiecesColor Invert(this PiecesColor color) =>
-            color switch
-            {
-                PiecesColor.Black => PiecesColor.White,
-                PiecesColor.White => PiecesColor.Black,
-                _ => throw new ArgumentOutOfRangeException()
-            };
+            color == PiecesColor.Black
+                ? PiecesColor.White
+                : PiecesColor.Black;
     }
 }
