@@ -108,7 +108,7 @@ namespace Chess.ConsoleApp.Services
             );
         }
 
-        public MoveSelection RequestMoveSelection(out Move? move)
+        public MoveSelection TryRequestMoveSelection(Board board, out Move? move)
         {
             Console.WriteLine();
             Console.WriteLine("move: e.g. \"a1b2\"");
@@ -119,18 +119,51 @@ namespace Chess.ConsoleApp.Services
             {
                 Console.Write("command> ");
 
+                move = null;
+
                 switch (Console.ReadLine() ?? "")
                 {
                     case var moveStr when Regex.IsMatch(moveStr, "[a-h][1-8][a-h][1-8]"):
-                        move = null;
-                        return MoveSelection.Move;
+                        int InvertIndex(int index) => 8 - index - 1;
+
+                        var srcRow = InvertIndex(moveStr[1] - '1');
+                        var srcCol = moveStr[0] - 'a';
+                        var dstRow = InvertIndex(moveStr[3] - '1');
+                        var dstCol = moveStr[2] - 'a';
+
+                        switch (board.TryCreateMove(srcRow, srcCol, dstRow, dstCol, out move))
+                        {
+                            case CreateMoveResult.InvalidSrc:
+                                Console.WriteLine("invalid source");
+                                continue;
+
+                            case CreateMoveResult.InvalidDst:
+                                Console.WriteLine("invalid destination");
+                                continue;
+
+                            case CreateMoveResult.InvalidMove:
+                                Console.WriteLine("invalid movement for piece");
+                                continue;
+
+                            case CreateMoveResult.InvalidPath:
+                                Console.WriteLine("the path is obstructed");
+                                continue;
+
+                            case CreateMoveResult.Created:
+                                return MoveSelection.Move;
+
+                            default:
+                                throw new NotImplementedException();
+                        }
+
                     case "save":
-                        move = null;
                         return MoveSelection.SaveGame;
+
                     case "exit":
-                        move = null;
                         return MoveSelection.ExitGame;
+
                     default:
+                        Console.WriteLine("invalid command");
                         continue;
                 }
             }

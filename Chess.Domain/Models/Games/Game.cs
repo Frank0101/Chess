@@ -25,19 +25,16 @@ namespace Chess.Domain.Models.Games
 
         public void Start()
         {
-            var turnColor = PiecesColor.White;
-
             while (true)
             {
-                TurnStarted?.Invoke(turnColor);
+                TurnStarted?.Invoke(Board.TurnColor);
 
-                var turnPlayer = turnColor == Player1.Color
+                var turnPlayer = Board.TurnColor == Player1.Color
                     ? Player1
                     : Player2;
 
                 if (turnPlayer.TryMove(Board))
                 {
-                    turnColor = turnColor.Invert();
                 }
                 else
                 {

@@ -29,7 +29,7 @@ namespace Chess.ConsoleApp
                         _consoleService.DisplayBoard(game.Board, game.UserPlayer.Color);
 
                     game.UserPlayer.MoveRequested += board =>
-                        _consoleService.RequestMoveSelection(out var move) switch
+                        _consoleService.TryRequestMoveSelection(game.Board, out var move) switch
                         {
                             MoveSelection.Move => move,
                             MoveSelection.SaveGame => null,

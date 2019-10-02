@@ -8,5 +8,10 @@ namespace Chess.Domain.Models.Pieces
             : base(color, color == PiecesColor.Black ? 'r' : 'R', 5)
         {
         }
+
+        public override bool IsMoveValid(int srcRow, int srcCol, int dstRow, int dstCol)
+        {
+            return true;
+        }
     }
 }

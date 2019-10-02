@@ -8,6 +8,8 @@ namespace Chess.Domain.Models
     {
         private readonly Tile[,] _tiles = new Tile[8, 8];
 
+        public PiecesColor TurnColor => PiecesColor.White;
+
         public Tile this[int row, int col] => _tiles[row, col];
 
         public Board()
@@ -55,6 +57,50 @@ namespace Chess.Domain.Models
                     }
                 }
             }
+        }
+
+        public CreateMoveResult TryCreateMove(int srcRow, int srcCol,
+            int dstRow, int dstCol, out Move? move)
+        {
+            var srcTile = _tiles[srcRow, srcCol];
+            var dstTile = _tiles[dstRow, dstCol];
+
+            bool IsSrcValid() => srcTile.Piece switch
+            {
+                {} piece when piece.Color == TurnColor => true,
+                _ => false
+            };
+
+            bool IsDstValid() => dstTile.Piece switch
+            {
+                null => true,
+                {} piece when piece.Color != TurnColor => true,
+                _ => false
+            };
+
+            bool IsMoveValid() => srcTile.Piece switch
+            {
+                {} piece when piece.IsMoveValid(srcRow, srcCol,
+                    dstRow, dstCol) => true,
+                _ => false
+            };
+
+            bool IsPathValid() => srcTile.Piece switch
+            {
+                Knight _ => true,
+                _ => false
+            };
+
+            move = null;
+
+            if (!IsSrcValid()) return CreateMoveResult.InvalidSrc;
+            if (!IsDstValid()) return CreateMoveResult.InvalidDst;
+            if (!IsMoveValid()) return CreateMoveResult.InvalidMove;
+            if (!IsPathValid()) return CreateMoveResult.InvalidPath;
+
+            move = new Move(srcTile, dstTile);
+
+            return CreateMoveResult.Created;
         }
 
         public override string ToString()

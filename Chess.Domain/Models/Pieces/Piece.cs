@@ -15,6 +15,9 @@ namespace Chess.Domain.Models.Pieces
             Value = value;
         }
 
+        public abstract bool IsMoveValid(int srcRow, int srcCol,
+            int dstRow, int dstCol);
+
         public override string ToString()
         {
             return Symbol.ToString();
