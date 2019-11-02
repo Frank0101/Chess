@@ -11,7 +11,7 @@ namespace Chess.Domain.Models.Players
         {
         }
 
-        internal override bool TryMove(Board board)
+        public override bool TryMove(Board board)
         {
             var move = MoveRequested?.Invoke(board);
             return false;

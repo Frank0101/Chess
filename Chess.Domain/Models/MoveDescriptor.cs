@@ -7,8 +7,7 @@ namespace Chess.Domain.Models
         public int DstRow { get; }
         public int DstCol { get; }
 
-        public MoveDescriptor(int srcRow, int srcCol,
-            int dstRow, int dstCol)
+        public MoveDescriptor(int srcRow, int srcCol, int dstRow, int dstCol)
         {
             SrcRow = srcRow;
             SrcCol = srcCol;

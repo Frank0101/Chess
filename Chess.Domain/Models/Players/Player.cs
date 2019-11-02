@@ -11,6 +11,6 @@ namespace Chess.Domain.Models.Players
             Color = color;
         }
 
-        internal abstract bool TryMove(Board board);
+        public abstract bool TryMove(Board board);
     }
 }

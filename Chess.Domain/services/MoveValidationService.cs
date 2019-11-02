@@ -2,7 +2,7 @@ using Chess.Domain.Enums;
 using Chess.Domain.Models;
 using Chess.Domain.Models.Pieces;
 
-namespace Chess.Domain.services
+namespace Chess.Domain.Services
 {
     public class MoveValidationService : IMoveValidationService
     {

@@ -1,7 +1,7 @@
 using Chess.Domain.Enums;
 using Chess.Domain.Models;
 
-namespace Chess.Domain.services
+namespace Chess.Domain.Services
 {
     public interface IMoveValidationService
     {

@@ -1,26 +1,62 @@
 using System.Text;
 using Chess.Domain.Enums;
 using Chess.Domain.Models.Pieces;
-using Chess.Domain.services;
+using Chess.Domain.Services;
 
 namespace Chess.Domain.Models
 {
     public class Board
     {
         private readonly IMoveValidationService _moveValidationService;
-
-        internal Board(IMoveValidationService moveValidationService)
-        {
-            _moveValidationService = moveValidationService;
-        }
-
         private readonly Tile[,] _tiles = new Tile[8, 8];
 
-        public PiecesColor TurnColor => PiecesColor.White;
+        public PiecesColor TurnColor { get; private set; }
 
         public Tile this[int row, int col] => _tiles[row, col];
 
-        public Board()
+        public Board(IMoveValidationService moveValidationService)
+        {
+            _moveValidationService = moveValidationService;
+
+            TurnColor = PiecesColor.White;
+            InitPieces();
+        }
+
+        public MoveValidationResult TryCreateMove(MoveDescriptor moveDescriptor, out Move? move)
+        {
+            move = null;
+
+            var moveValidationResult = _moveValidationService.ValidateMove(this, moveDescriptor);
+            if (moveValidationResult == MoveValidationResult.Valid)
+            {
+                move = new Move(this, moveDescriptor);
+            }
+
+            return moveValidationResult;
+        }
+
+        public void ApplyMove(Move move)
+        {
+            TurnColor = TurnColor.Invert();
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            for (var row = 0; row < 8; row++)
+            {
+                if (row > 0) sb.AppendLine();
+                for (var col = 0; col < 8; col++)
+                {
+                    sb.Append(_tiles[row, col]);
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        private void InitPieces()
         {
             for (var row = 0; row < 8; row++)
             {
@@ -65,35 +101,6 @@ namespace Chess.Domain.Models
                     }
                 }
             }
-        }
-
-        public MoveValidationResult TryCreateMove(MoveDescriptor moveDescriptor, out Move? move)
-        {
-            move = null;
-
-            var moveValidationResult = _moveValidationService.ValidateMove(this, moveDescriptor);
-            if (moveValidationResult == MoveValidationResult.Valid)
-            {
-                move = new Move(this, moveDescriptor);
-            }
-
-            return moveValidationResult;
-        }
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-
-            for (var row = 0; row < 8; row++)
-            {
-                if (row > 0) sb.AppendLine();
-                for (var col = 0; col < 8; col++)
-                {
-                    sb.Append(_tiles[row, col]);
-                }
-            }
-
-            return sb.ToString();
         }
     }
 }
