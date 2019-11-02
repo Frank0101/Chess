@@ -131,25 +131,27 @@ namespace Chess.ConsoleApp.Services
                         var dstRow = InvertIndex(moveStr[3] - '1');
                         var dstCol = moveStr[2] - 'a';
 
-                        switch (board.TryCreateMove(srcRow, srcCol, dstRow, dstCol, out move))
+                        var moveDescriptor = new MoveDescriptor(srcRow, srcCol, dstRow, dstCol);
+
+                        switch (board.TryCreateMove(moveDescriptor, out move))
                         {
-                            case CreateMoveResult.InvalidSrc:
+                            case MoveValidationResult.InvalidSrc:
                                 Console.WriteLine("invalid source");
                                 continue;
 
-                            case CreateMoveResult.InvalidDst:
+                            case MoveValidationResult.InvalidDst:
                                 Console.WriteLine("invalid destination");
                                 continue;
 
-                            case CreateMoveResult.InvalidMove:
+                            case MoveValidationResult.InvalidMove:
                                 Console.WriteLine("invalid movement for piece");
                                 continue;
 
-                            case CreateMoveResult.InvalidPath:
+                            case MoveValidationResult.InvalidPath:
                                 Console.WriteLine("the path is obstructed");
                                 continue;
 
-                            case CreateMoveResult.Created:
+                            case MoveValidationResult.Valid:
                                 return MoveSelection.Move;
 
                             default:

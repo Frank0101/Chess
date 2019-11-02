@@ -5,10 +5,10 @@ namespace Chess.Domain.Models
         public Tile SrcTile { get; }
         public Tile DstTile { get; }
 
-        internal Move(Tile srcTile, Tile dstTile)
+        internal Move(Board board, MoveDescriptor moveDescriptor)
         {
-            SrcTile = srcTile;
-            DstTile = dstTile;
+            SrcTile = board[moveDescriptor.SrcRow, moveDescriptor.SrcCol];
+            DstTile = board[moveDescriptor.DstRow, moveDescriptor.DstCol];
         }
     }
 }

@@ -15,8 +15,7 @@ namespace Chess.Domain.Models.Pieces
             Value = value;
         }
 
-        public abstract bool IsMoveValid(int srcRow, int srcCol,
-            int dstRow, int dstCol);
+        public abstract bool IsMoveValid(MoveDescriptor moveDescriptor);
 
         public override string ToString()
         {

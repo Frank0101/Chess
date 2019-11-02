@@ -1,11 +1,11 @@
 namespace Chess.Domain.Enums
 {
-    public enum CreateMoveResult
+    public enum MoveValidationResult
     {
         InvalidSrc,
         InvalidDst,
         InvalidMove,
         InvalidPath,
-        Created
+        Valid
     }
 }

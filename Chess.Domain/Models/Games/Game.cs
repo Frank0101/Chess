@@ -1,6 +1,7 @@
 using System;
 using Chess.Domain.Enums;
 using Chess.Domain.Models.Players;
+using Chess.Domain.services;
 
 namespace Chess.Domain.Models.Games
 {
@@ -13,14 +14,15 @@ namespace Chess.Domain.Models.Games
 
         public event Action<PiecesColor>? TurnStarted;
 
-        protected Game(Player player1, Player player2)
+        protected Game(IBoardFactory boardFactory, Player player1, Player player2)
         {
             if (player1.Color != player2.Color.Invert())
                 throw new ArgumentException();
 
             Player1 = player1;
             Player2 = player2;
-            Board = new Board();
+
+            Board = boardFactory.Create();
         }
 
         public void Start()

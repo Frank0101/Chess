@@ -9,7 +9,7 @@ namespace Chess.Domain.Models.Pieces
         {
         }
 
-        public override bool IsMoveValid(int srcRow, int srcCol, int dstRow, int dstCol)
+        public override bool IsMoveValid(MoveDescriptor moveDescriptor)
         {
             return true;
         }

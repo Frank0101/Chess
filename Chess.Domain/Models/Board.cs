@@ -1,11 +1,19 @@
 using System.Text;
 using Chess.Domain.Enums;
 using Chess.Domain.Models.Pieces;
+using Chess.Domain.services;
 
 namespace Chess.Domain.Models
 {
     public class Board
     {
+        private readonly IMoveValidationService _moveValidationService;
+
+        internal Board(IMoveValidationService moveValidationService)
+        {
+            _moveValidationService = moveValidationService;
+        }
+
         private readonly Tile[,] _tiles = new Tile[8, 8];
 
         public PiecesColor TurnColor => PiecesColor.White;
@@ -59,48 +67,17 @@ namespace Chess.Domain.Models
             }
         }
 
-        public CreateMoveResult TryCreateMove(int srcRow, int srcCol,
-            int dstRow, int dstCol, out Move? move)
+        public MoveValidationResult TryCreateMove(MoveDescriptor moveDescriptor, out Move? move)
         {
-            var srcTile = _tiles[srcRow, srcCol];
-            var dstTile = _tiles[dstRow, dstCol];
-
-            bool IsSrcValid() => srcTile.Piece switch
-            {
-                {} piece when piece.Color == TurnColor => true,
-                _ => false
-            };
-
-            bool IsDstValid() => dstTile.Piece switch
-            {
-                null => true,
-                {} piece when piece.Color != TurnColor => true,
-                _ => false
-            };
-
-            bool IsMoveValid() => srcTile.Piece switch
-            {
-                {} piece when piece.IsMoveValid(srcRow, srcCol,
-                    dstRow, dstCol) => true,
-                _ => false
-            };
-
-            bool IsPathValid() => srcTile.Piece switch
-            {
-                Knight _ => true,
-                _ => false
-            };
-
             move = null;
 
-            if (!IsSrcValid()) return CreateMoveResult.InvalidSrc;
-            if (!IsDstValid()) return CreateMoveResult.InvalidDst;
-            if (!IsMoveValid()) return CreateMoveResult.InvalidMove;
-            if (!IsPathValid()) return CreateMoveResult.InvalidPath;
+            var moveValidationResult = _moveValidationService.ValidateMove(this, moveDescriptor);
+            if (moveValidationResult == MoveValidationResult.Valid)
+            {
+                move = new Move(this, moveDescriptor);
+            }
 
-            move = new Move(srcTile, dstTile);
-
-            return CreateMoveResult.Created;
+            return moveValidationResult;
         }
 
         public override string ToString()

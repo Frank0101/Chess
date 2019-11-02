@@ -1,16 +1,18 @@
 using System;
 using Chess.ConsoleApp.Enums;
 using Chess.ConsoleApp.Services;
-using Chess.Domain.Models.Games;
+using Chess.Domain.services;
 
 namespace Chess.ConsoleApp
 {
     public class Application
     {
+        private readonly IGameFactory _gameFactory;
         private readonly IConsoleService _consoleService;
 
-        public Application(IConsoleService consoleService)
+        public Application(IGameFactory gameFactory, IConsoleService consoleService)
         {
+            _gameFactory = gameFactory;
             _consoleService = consoleService;
         }
 
@@ -23,7 +25,7 @@ namespace Chess.ConsoleApp
                 case MainMenuSelection.NewGame:
                 {
                     var (userColor, recursionLevel) = _consoleService.RequestNewGameConfig();
-                    var game = new UserVsCpuGame(userColor, recursionLevel);
+                    var game = _gameFactory.CreateUserVsCpuGame(userColor, recursionLevel);
 
                     game.TurnStarted += _ =>
                         _consoleService.DisplayBoard(game.Board, game.UserPlayer.Color);
