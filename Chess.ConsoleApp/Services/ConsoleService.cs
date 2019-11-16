@@ -17,7 +17,7 @@ namespace Chess.ConsoleApp.Services
  | |   | '_ \ / _ \/ __/ __| |  \| |/ _ \ __|
  | |___| | | |  __/\__ \__ \_| |\  |  __/ |_ 
   \____|_| |_|\___||___/___(_)_| \_|\___|\__|
-            ");
+");
         }
 
         public MainMenuSelection RequestMainMenuSelection() =>
@@ -49,14 +49,6 @@ namespace Chess.ConsoleApp.Services
                 RequestUserColor(),
                 RequestRecursionLevel()
             );
-        }
-
-        private static char RequestKey(string prompt)
-        {
-            Console.Write($"{prompt}: ");
-            var key = Console.ReadKey().KeyChar;
-            Console.WriteLine();
-            return key;
         }
 
         public void DisplayBoard(Board board, PiecesColor frontColor)
@@ -169,6 +161,14 @@ namespace Chess.ConsoleApp.Services
                         continue;
                 }
             }
+        }
+
+        private static char RequestKey(string prompt)
+        {
+            Console.Write($"{prompt}: ");
+            var key = (char) Console.Read();
+            Console.WriteLine();
+            return key;
         }
     }
 }
