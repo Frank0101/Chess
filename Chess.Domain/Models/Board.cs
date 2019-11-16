@@ -8,6 +8,7 @@ namespace Chess.Domain.Models
     public class Board
     {
         private readonly IMoveValidationService _moveValidationService;
+
         private readonly Tile[,] _tiles = new Tile[8, 8];
 
         public PiecesColor TurnColor { get; private set; }
