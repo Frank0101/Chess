@@ -50,10 +50,12 @@ namespace Chess.Test.Unit.ConsoleApp
             application.Start();
 
             // assert
+            boardFactoryMock.Verify(mock => mock.Create());
+            gameFactoryMock.Verify(mock => mock.CreateUserVsCpuGame(userColor, recursionLevel));
             consoleServiceMock.Verify(mock => mock.DisplayTitle());
             consoleServiceMock.Verify(mock => mock.RequestMainMenuSelection());
             consoleServiceMock.Verify(mock => mock.RequestNewGameConfig());
-            gameFactoryMock.Verify(mock => mock.CreateUserVsCpuGame(userColor, recursionLevel));
+            consoleServiceMock.Verify(mock => mock.DisplayBoard(board, userColor));
         }
     }
 }
