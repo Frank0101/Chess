@@ -14,16 +14,16 @@ namespace Chess.Test.Unit.Domain.Models.Games
         public void Constructor_GivenParameters_ShouldCreate()
         {
             // arrange
-            var boardFactoryMock = new Mock<IBoardFactory>();
             const PiecesColor userColor = PiecesColor.Black;
             const int recursionLevel = 3;
 
             var moveValidationServiceMock = new Mock<IMoveValidationService>();
-            var expectedBoard = new Board(moveValidationServiceMock.Object);
+            var board = new Board(moveValidationServiceMock.Object);
 
+            var boardFactoryMock = new Mock<IBoardFactory>();
             boardFactoryMock
                 .Setup(mock => mock.Create())
-                .Returns(expectedBoard);
+                .Returns(board);
 
             // act
             var game = new UserVsCpuGame(boardFactoryMock.Object, userColor, recursionLevel);
@@ -36,7 +36,7 @@ namespace Chess.Test.Unit.Domain.Models.Games
             game.CpuPlayer.Color.Should().Be(userColor.Invert());
             game.CpuPlayer.RecursionLevel.Should().Be(recursionLevel);
 
-            game.Board.Should().Be(expectedBoard);
+            game.Board.Should().Be(board);
         }
     }
 }

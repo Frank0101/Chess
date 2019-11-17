@@ -64,16 +64,16 @@ namespace Chess.Test.Unit.Domain.Models
         public void TryCreateMove_GivenValidMoveDescriptor_ShouldSucceed()
         {
             // arrange
-            var moveValidationServiceMock = new Mock<IMoveValidationService>();
-            var board = new Board(moveValidationServiceMock.Object);
-
             var (srcRow, srcCol, dstRow, dstCol) = (1, 2, 3, 4);
             var moveDescriptor = new MoveDescriptor(srcRow, srcCol, dstRow, dstCol);
 
+            var moveValidationServiceMock = new Mock<IMoveValidationService>();
             moveValidationServiceMock
                 .Setup(mock =>
-                    mock.ValidateMove(board, moveDescriptor))
+                    mock.ValidateMove(It.IsAny<Board>(), moveDescriptor))
                 .Returns(MoveValidationResult.Valid);
+
+            var board = new Board(moveValidationServiceMock.Object);
 
             // act
             var result = board.TryCreateMove(moveDescriptor, out var move);
@@ -90,16 +90,16 @@ namespace Chess.Test.Unit.Domain.Models
         public void TryCreateMove_GivenInvalidMoveDescriptor_ShouldFail()
         {
             // arrange
-            var moveValidationServiceMock = new Mock<IMoveValidationService>();
-            var board = new Board(moveValidationServiceMock.Object);
-
             var (srcRow, srcCol, dstRow, dstCol) = (1, 2, 3, 4);
             var moveDescriptor = new MoveDescriptor(srcRow, srcCol, dstRow, dstCol);
 
+            var moveValidationServiceMock = new Mock<IMoveValidationService>();
             moveValidationServiceMock
                 .Setup(mock =>
-                    mock.ValidateMove(board, moveDescriptor))
+                    mock.ValidateMove(It.IsAny<Board>(), moveDescriptor))
                 .Returns(MoveValidationResult.InvalidSrc);
+
+            var board = new Board(moveValidationServiceMock.Object);
 
             // act
             var result = board.TryCreateMove(moveDescriptor, out var move);

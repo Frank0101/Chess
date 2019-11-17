@@ -12,11 +12,11 @@ namespace Chess.Test.Unit.Domain.Services
         public void CreateUserVsCpuGame_ShouldCreateGame()
         {
             // arrange
-            var boardFactoryMock = new Mock<IBoardFactory>();
-            var sut = new GameFactory(boardFactoryMock.Object);
-
             const PiecesColor userColor = PiecesColor.Black;
             const int recursionLevel = 3;
+
+            var boardFactoryMock = new Mock<IBoardFactory>();
+            var sut = new GameFactory(boardFactoryMock.Object);
 
             // act
             var game = sut.CreateUserVsCpuGame(userColor, recursionLevel);
