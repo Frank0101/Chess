@@ -8,6 +8,10 @@ namespace Chess.Test.Unit.Domain.Models.Pieces
 {
     public class PawnTest
     {
+        private const int BlackRow = 1;
+        private const int WhiteRow = 6;
+        private const int Col = 3;
+
         [Theory]
         [InlineData(PiecesColor.Black, 'p')]
         [InlineData(PiecesColor.White, 'P')]
@@ -23,16 +27,16 @@ namespace Chess.Test.Unit.Domain.Models.Pieces
         }
 
         [Theory]
-        [InlineData(PiecesColor.Black, 1, 3, 2, 3, false)]
-        [InlineData(PiecesColor.Black, 1, 3, 3, 3, false)]
-        [InlineData(PiecesColor.Black, 3, 3, 4, 3, false)]
-        [InlineData(PiecesColor.Black, 4, 3, 5, 2, true)]
-        [InlineData(PiecesColor.Black, 4, 3, 5, 4, true)]
-        [InlineData(PiecesColor.White, 6, 3, 5, 3, false)]
-        [InlineData(PiecesColor.White, 6, 3, 4, 3, false)]
-        [InlineData(PiecesColor.White, 4, 3, 3, 3, false)]
-        [InlineData(PiecesColor.White, 3, 3, 2, 2, true)]
-        [InlineData(PiecesColor.White, 3, 3, 2, 4, true)]
+        [InlineData(PiecesColor.Black, BlackRow, Col, BlackRow + 1, Col, false)]
+        [InlineData(PiecesColor.Black, BlackRow, Col, BlackRow + 2, Col, false)]
+        [InlineData(PiecesColor.Black, BlackRow + 1, Col, BlackRow + 2, Col, false)]
+        [InlineData(PiecesColor.Black, BlackRow, Col, BlackRow + 1, Col - 1, true)]
+        [InlineData(PiecesColor.Black, BlackRow, Col, BlackRow + 1, Col + 1, true)]
+        [InlineData(PiecesColor.White, WhiteRow, Col, WhiteRow - 1, Col, false)]
+        [InlineData(PiecesColor.White, WhiteRow, Col, WhiteRow - 2, Col, false)]
+        [InlineData(PiecesColor.White, WhiteRow - 1, Col, WhiteRow - 2, Col, false)]
+        [InlineData(PiecesColor.White, WhiteRow, Col, WhiteRow - 1, Col - 1, true)]
+        [InlineData(PiecesColor.White, WhiteRow, Col, WhiteRow - 1, Col + 1, true)]
         public void IsMoveValid_GivenValidMove_ShouldReturnTrue(PiecesColor color,
             int srcRow, int srcCol, int dstRow, int dstCol, bool eating)
         {
@@ -48,18 +52,18 @@ namespace Chess.Test.Unit.Domain.Models.Pieces
         }
 
         [Theory]
-        [InlineData(PiecesColor.Black, 1, 3, 4, 3, false)]
-        [InlineData(PiecesColor.Black, 2, 3, 4, 3, false)]
-        [InlineData(PiecesColor.Black, 2, 3, 1, 3, false)]
-        [InlineData(PiecesColor.Black, 2, 3, 3, 2, false)]
-        [InlineData(PiecesColor.Black, 2, 3, 3, 4, false)]
-        [InlineData(PiecesColor.Black, 2, 3, 3, 3, true)]
-        [InlineData(PiecesColor.White, 6, 3, 3, 3, false)]
-        [InlineData(PiecesColor.White, 5, 3, 3, 3, false)]
-        [InlineData(PiecesColor.White, 5, 3, 6, 3, false)]
-        [InlineData(PiecesColor.White, 5, 3, 4, 2, false)]
-        [InlineData(PiecesColor.White, 5, 3, 4, 4, false)]
-        [InlineData(PiecesColor.White, 5, 3, 4, 3, true)]
+        [InlineData(PiecesColor.Black, BlackRow, Col, BlackRow - 1, Col, false)]
+        [InlineData(PiecesColor.Black, BlackRow, Col, BlackRow + 3, Col, false)]
+        [InlineData(PiecesColor.Black, BlackRow + 1, Col, BlackRow + 3, Col, false)]
+        [InlineData(PiecesColor.Black, BlackRow, Col, BlackRow + 1, Col, true)]
+        [InlineData(PiecesColor.Black, BlackRow, Col, BlackRow + 1, Col - 1, false)]
+        [InlineData(PiecesColor.Black, BlackRow, Col, BlackRow + 1, Col + 1, false)]
+        [InlineData(PiecesColor.White, BlackRow, Col, BlackRow + 1, Col, false)]
+        [InlineData(PiecesColor.White, BlackRow, Col, BlackRow - 3, Col, false)]
+        [InlineData(PiecesColor.White, BlackRow - 1, Col, BlackRow - 3, Col, false)]
+        [InlineData(PiecesColor.White, BlackRow, Col, BlackRow - 1, Col, true)]
+        [InlineData(PiecesColor.White, BlackRow, Col, BlackRow - 1, Col - 1, false)]
+        [InlineData(PiecesColor.White, BlackRow, Col, BlackRow - 1, Col + 1, false)]
         public void IsValidMove_GivenInvalidMove_ShouldReturnFalse(PiecesColor color,
             int srcRow, int srcCol, int dstRow, int dstCol, bool eating)
         {

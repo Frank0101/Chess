@@ -15,17 +15,9 @@ namespace Chess.Domain.Models.Pieces
             var deltaRow = moveDescriptor.DstRow - moveDescriptor.SrcRow;
             var deltaCol = moveDescriptor.DstCol - moveDescriptor.SrcCol;
 
-            if (Math.Abs(deltaRow) == Math.Abs(deltaCol))
-            {
-                return true;
-            }
-
-            if (deltaRow == 0 && deltaCol != 0
-                || deltaRow != 0 && deltaCol == 0)
-            {
-            }
-
-            return false;
+            return Math.Abs(deltaRow) == Math.Abs(deltaCol)
+                   || deltaRow == 0 && deltaCol != 0
+                   || deltaRow != 0 && deltaCol == 0;
         }
     }
 }

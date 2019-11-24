@@ -8,6 +8,9 @@ namespace Chess.Test.Unit.Domain.Models.Pieces
 {
     public class RookTest
     {
+        private const int Row = 3;
+        private const int Col = 3;
+
         [Theory]
         [InlineData(PiecesColor.Black, 'r')]
         [InlineData(PiecesColor.White, 'R')]
@@ -23,10 +26,10 @@ namespace Chess.Test.Unit.Domain.Models.Pieces
         }
 
         [Theory]
-        [InlineData(3, 3, 1, 3)]
-        [InlineData(3, 3, 3, 5)]
-        [InlineData(3, 3, 5, 3)]
-        [InlineData(3, 3, 3, 1)]
+        [InlineData(Row, Col, Row - 2, Col)]
+        [InlineData(Row, Col, Row, Col + 2)]
+        [InlineData(Row, Col, Row + 2, Col)]
+        [InlineData(Row, Col, Row, Col - 2)]
         public void IsMoveValid_GivenValidMove_ShouldReturnTrue(
             int srcRow, int srcCol, int dstRow, int dstCol)
         {
@@ -42,10 +45,10 @@ namespace Chess.Test.Unit.Domain.Models.Pieces
         }
 
         [Theory]
-        [InlineData(3, 3, 1, 5)]
-        [InlineData(3, 3, 5, 5)]
-        [InlineData(3, 3, 1, 1)]
-        [InlineData(3, 3, 5, 1)]
+        [InlineData(Row, Col, Row - 2, Col + 2)]
+        [InlineData(Row, Col, Row + 2, Col + 2)]
+        [InlineData(Row, Col, Row + 2, Col - 2)]
+        [InlineData(Row, Col, Row - 2, Col - 2)]
         public void IsValidMove_GivenInvalidMove_ShouldReturnFalse(
             int srcRow, int srcCol, int dstRow, int dstCol)
         {
