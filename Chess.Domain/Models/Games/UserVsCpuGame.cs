@@ -1,7 +1,7 @@
 using System;
 using Chess.Domain.Enums;
+using Chess.Domain.Factories;
 using Chess.Domain.Models.Players;
-using Chess.Domain.Services;
 
 namespace Chess.Domain.Models.Games
 {

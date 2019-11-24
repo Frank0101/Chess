@@ -1,6 +1,6 @@
 using Chess.Domain.Models;
 
-namespace Chess.Domain.Services
+namespace Chess.Domain.Factories
 {
     public interface IBoardFactory
     {

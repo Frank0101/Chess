@@ -3,6 +3,7 @@ using Chess.ConsoleApp.Enums;
 using Chess.ConsoleApp.Models;
 using Chess.ConsoleApp.Services;
 using Chess.Domain.Enums;
+using Chess.Domain.Factories;
 using Chess.Domain.Models;
 using Chess.Domain.Models.Games;
 using Chess.Domain.Services;

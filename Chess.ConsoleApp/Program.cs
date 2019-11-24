@@ -1,4 +1,5 @@
 ﻿using Chess.ConsoleApp.Services;
+using Chess.Domain.Factories;
 using Chess.Domain.Services;
 using Microsoft.Extensions.DependencyInjection;
 

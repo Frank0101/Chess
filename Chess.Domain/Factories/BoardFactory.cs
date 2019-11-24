@@ -1,6 +1,7 @@
 using Chess.Domain.Models;
+using Chess.Domain.Services;
 
-namespace Chess.Domain.Services
+namespace Chess.Domain.Factories
 {
     public class BoardFactory : IBoardFactory
     {
