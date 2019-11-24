@@ -1,3 +1,4 @@
+using System;
 using Chess.Domain.Enums;
 
 namespace Chess.Domain.Models.Pieces
@@ -11,7 +12,11 @@ namespace Chess.Domain.Models.Pieces
 
         public override bool IsMoveValid(MoveDescriptor moveDescriptor, bool eating)
         {
-            return true;
+            var deltaRow = moveDescriptor.SrcRow - moveDescriptor.DstRow;
+            var deltaCol = moveDescriptor.SrcCol - moveDescriptor.DstCol;
+
+            return Math.Abs(deltaRow) == 1 && Math.Abs(deltaCol) == 2
+                   || Math.Abs(deltaRow) == 2 && Math.Abs(deltaCol) == 1;
         }
     }
 }

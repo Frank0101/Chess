@@ -1,4 +1,3 @@
-using AutoFixture;
 using Chess.Domain.Enums;
 using Chess.Domain.Models;
 using Chess.Domain.Models.Pieces;
@@ -9,8 +8,6 @@ namespace Chess.Test.Unit.Domain.Models.Pieces
 {
     public class PawnTest
     {
-        private readonly Fixture _fixture = new Fixture();
-
         [Theory]
         [InlineData(PiecesColor.Black, 'p')]
         [InlineData(PiecesColor.White, 'P')]
