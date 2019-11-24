@@ -26,21 +26,41 @@ namespace Chess.Test.Unit.Domain.Models.Pieces
         }
 
         [Theory]
-        [InlineData(PiecesColor.Black, true)]
-        [InlineData(PiecesColor.Black, false)]
-        [InlineData(PiecesColor.White, true)]
-        [InlineData(PiecesColor.White, false)]
-        public void IsMoveValid_ShouldReturnTrue(PiecesColor color, bool eating)
+        [InlineData(3, 3, 1, 5)]
+        [InlineData(3, 3, 5, 5)]
+        [InlineData(3, 3, 1, 1)]
+        [InlineData(3, 3, 5, 1)]
+        public void IsMoveValid_GivenValidMove_ShouldReturnTrue(
+            int srcRow, int srcCol, int dstRow, int dstCol)
         {
             // arrange
-            var bishop = new Bishop(color);
-            var moveDescriptor = _fixture.Create<MoveDescriptor>();
+            var bishop = new Bishop(PiecesColor.Black);
+            var moveDescriptor = new MoveDescriptor(srcRow, srcCol, dstRow, dstCol);
 
             // act
-            var result = bishop.IsMoveValid(moveDescriptor, eating);
+            var result = bishop.IsMoveValid(moveDescriptor, false);
 
             // assert
             result.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData(3, 3, 1, 3)]
+        [InlineData(3, 3, 3, 5)]
+        [InlineData(3, 3, 5, 3)]
+        [InlineData(3, 3, 3, 1)]
+        public void IsValidMove_GivenInvalidMove_ShouldReturnFalse(
+            int srcRow, int srcCol, int dstRow, int dstCol)
+        {
+            // arrange
+            var bishop = new Bishop(PiecesColor.Black);
+            var moveDescriptor = new MoveDescriptor(srcRow, srcCol, dstRow, dstCol);
+
+            // act
+            var result = bishop.IsMoveValid(moveDescriptor, false);
+
+            // assert
+            result.Should().BeFalse();
         }
 
         [Theory]
