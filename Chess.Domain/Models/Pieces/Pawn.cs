@@ -14,21 +14,21 @@ namespace Chess.Domain.Models.Pieces
         {
             var normalisedMovDesc = Color switch
             {
-                PiecesColor.Black => new MoveDescriptor(
+                PiecesColor.Black => moveDescriptor,
+                PiecesColor.White => new MoveDescriptor(
                     7 - moveDescriptor.SrcRow, 7 - moveDescriptor.SrcCol,
                     7 - moveDescriptor.DstRow, 7 - moveDescriptor.DstCol),
-                PiecesColor.White => moveDescriptor,
                 _ => throw new NotImplementedException()
             };
 
-            var deltaRow = normalisedMovDesc.SrcRow - normalisedMovDesc.DstRow;
-            var deltaCol = normalisedMovDesc.SrcCol - normalisedMovDesc.DstCol;
+            var deltaRow = normalisedMovDesc.DstRow - normalisedMovDesc.SrcRow;
+            var deltaCol = normalisedMovDesc.DstCol - normalisedMovDesc.SrcCol;
 
             if (deltaRow > 0)
             {
                 if (deltaCol == 0 && !eating)
                 {
-                    if (normalisedMovDesc.SrcRow == 6 && deltaRow <= 2 || deltaRow == 1)
+                    if (normalisedMovDesc.SrcRow == 1 && deltaRow <= 2 || deltaRow == 1)
                     {
                         return true;
                     }
