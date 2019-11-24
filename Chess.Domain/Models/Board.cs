@@ -1,13 +1,13 @@
 using System.Text;
 using Chess.Domain.Enums;
+using Chess.Domain.Factories;
 using Chess.Domain.Models.Pieces;
-using Chess.Domain.Services;
 
 namespace Chess.Domain.Models
 {
-    public class Board
+    public class Board : IBoard
     {
-        private readonly IMoveValidationService _moveValidationService;
+        private readonly IPieceFactory _pieceFactory;
 
         private readonly Tile[,] _tiles = new Tile[8, 8];
 
@@ -15,9 +15,9 @@ namespace Chess.Domain.Models
 
         public Tile this[int row, int col] => _tiles[row, col];
 
-        public Board(IMoveValidationService moveValidationService)
+        public Board(IPieceFactory pieceFactory)
         {
-            _moveValidationService = moveValidationService;
+            _pieceFactory = pieceFactory;
 
             TurnColor = PiecesColor.White;
             InitPieces();
@@ -27,7 +27,7 @@ namespace Chess.Domain.Models
         {
             move = null;
 
-            var moveValidationResult = _moveValidationService.ValidateMove(this, moveDescriptor);
+            var moveValidationResult = ValidateMove(moveDescriptor);
             if (moveValidationResult == MoveValidationResult.Valid)
             {
                 move = new Move(this, moveDescriptor);
@@ -102,6 +102,43 @@ namespace Chess.Domain.Models
                     }
                 }
             }
+        }
+
+        private MoveValidationResult ValidateMove(MoveDescriptor moveDescriptor)
+        {
+            var srcTile = _tiles[moveDescriptor.SrcRow, moveDescriptor.SrcCol];
+            var dstTile = _tiles[moveDescriptor.DstRow, moveDescriptor.DstCol];
+
+            bool IsSrcValid() => srcTile.Piece switch
+            {
+                {} piece when piece.Color == TurnColor => true,
+                _ => false
+            };
+
+            bool IsDstValid() => dstTile.Piece switch
+            {
+                null => true,
+                {} piece when piece.Color != TurnColor => true,
+                _ => false
+            };
+
+            bool IsMoveValid() => srcTile.Piece switch
+            {
+                {} piece when piece.IsMoveValid(moveDescriptor, false) => true,
+                _ => false
+            };
+
+            bool IsPathValid() => srcTile.Piece switch
+            {
+                Knight _ => true,
+                _ => false
+            };
+
+            if (!IsSrcValid()) return MoveValidationResult.InvalidSrc;
+            if (!IsDstValid()) return MoveValidationResult.InvalidDst;
+            if (!IsMoveValid()) return MoveValidationResult.InvalidMove;
+            if (!IsPathValid()) return MoveValidationResult.InvalidPath;
+            return MoveValidationResult.Valid;
         }
     }
 }

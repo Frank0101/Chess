@@ -2,7 +2,6 @@ using Chess.Domain.Enums;
 using Chess.Domain.Factories;
 using Chess.Domain.Models;
 using Chess.Domain.Models.Games;
-using Chess.Domain.Services;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -18,8 +17,8 @@ namespace Chess.Test.Unit.Domain.Models.Games
             const PiecesColor userColor = PiecesColor.Black;
             const int recursionLevel = 3;
 
-            var moveValidationServiceMock = new Mock<IMoveValidationService>();
-            var board = new Board(moveValidationServiceMock.Object);
+            var pieceFactoryMock = new Mock<IPieceFactory>();
+            var board = new Board(pieceFactoryMock.Object);
 
             var boardFactoryMock = new Mock<IBoardFactory>();
             boardFactoryMock

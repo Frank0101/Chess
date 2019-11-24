@@ -1,8 +1,8 @@
 using Chess.ConsoleApp.Enums;
 using Chess.ConsoleApp.Services;
 using Chess.Domain.Enums;
+using Chess.Domain.Factories;
 using Chess.Domain.Models;
-using Chess.Domain.Services;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -168,8 +168,8 @@ namespace Chess.Test.Unit.ConsoleApp.Services
             var consoleWrapperMock = new Mock<IConsoleWrapper>();
             var sut = new ConsoleService(consoleWrapperMock.Object);
 
-            var moveValidationServiceMock = new Mock<IMoveValidationService>();
-            var board = new Board(moveValidationServiceMock.Object);
+            var pieceFactoryMock = new Mock<IPieceFactory>();
+            var board = new Board(pieceFactoryMock.Object);
 
             // act
             sut.DisplayBoard(board, PiecesColor.Black);
@@ -195,8 +195,8 @@ namespace Chess.Test.Unit.ConsoleApp.Services
             var consoleWrapperMock = new Mock<IConsoleWrapper>();
             var sut = new ConsoleService(consoleWrapperMock.Object);
 
-            var moveValidationServiceMock = new Mock<IMoveValidationService>();
-            var board = new Board(moveValidationServiceMock.Object);
+            var pieceFactoryMock = new Mock<IPieceFactory>();
+            var board = new Board(pieceFactoryMock.Object);
 
             // act
             sut.DisplayBoard(board, PiecesColor.White);

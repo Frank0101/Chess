@@ -1,20 +1,19 @@
 using Chess.Domain.Models;
-using Chess.Domain.Services;
 
 namespace Chess.Domain.Factories
 {
     public class BoardFactory : IBoardFactory
     {
-        private readonly IMoveValidationService _moveValidationService;
+        private readonly IPieceFactory _pieceFactory;
 
-        public BoardFactory(IMoveValidationService moveValidationService)
+        public BoardFactory(IPieceFactory pieceFactory)
         {
-            _moveValidationService = moveValidationService;
+            _pieceFactory = pieceFactory;
         }
 
         public Board Create()
         {
-            return new Board(_moveValidationService);
+            return new Board(_pieceFactory);
         }
     }
 }

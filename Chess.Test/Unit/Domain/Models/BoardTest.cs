@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using Chess.Domain.Enums;
+using Chess.Domain.Factories;
 using Chess.Domain.Models;
 using Chess.Domain.Models.Pieces;
-using Chess.Domain.Services;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -15,10 +15,10 @@ namespace Chess.Test.Unit.Domain.Models
         public void Constructor_GivenDependencies_ShouldCreate()
         {
             // arrange
-            var moveValidationServiceMock = new Mock<IMoveValidationService>();
+            var pieceFactoryMock = new Mock<IPieceFactory>();
 
             // act
-            var board = new Board(moveValidationServiceMock.Object);
+            var board = new Board(pieceFactoryMock.Object);
 
             // arrange
             board.TurnColor.Should().Be(PiecesColor.White);
@@ -67,20 +67,20 @@ namespace Chess.Test.Unit.Domain.Models
             var (srcRow, srcCol, dstRow, dstCol) = (1, 2, 3, 4);
             var moveDescriptor = new MoveDescriptor(srcRow, srcCol, dstRow, dstCol);
 
-            var moveValidationServiceMock = new Mock<IMoveValidationService>();
-            moveValidationServiceMock
-                .Setup(mock =>
-                    mock.ValidateMove(It.IsAny<Board>(), moveDescriptor))
-                .Returns(MoveValidationResult.Valid);
+            var pieceFactoryMock = new Mock<IPieceFactory>();
+//            pieceFactoryMock
+//                .Setup(mock =>
+//                    mock.ValidateMove(It.IsAny<Board>(), moveDescriptor))
+//                .Returns(MoveValidationResult.Valid);
 
-            var board = new Board(moveValidationServiceMock.Object);
+            var board = new Board(pieceFactoryMock.Object);
 
             // act
             var result = board.TryCreateMove(moveDescriptor, out var move);
 
             // assert
-            moveValidationServiceMock.Verify(mock =>
-                mock.ValidateMove(board, moveDescriptor));
+//            pieceFactoryMock.Verify(mock =>
+//                mock.ValidateMove(board, moveDescriptor));
 
             result.Should().Be(true);
             move.Should().BeEquivalentTo(new Move(board, moveDescriptor));
@@ -93,20 +93,20 @@ namespace Chess.Test.Unit.Domain.Models
             var (srcRow, srcCol, dstRow, dstCol) = (1, 2, 3, 4);
             var moveDescriptor = new MoveDescriptor(srcRow, srcCol, dstRow, dstCol);
 
-            var moveValidationServiceMock = new Mock<IMoveValidationService>();
-            moveValidationServiceMock
-                .Setup(mock =>
-                    mock.ValidateMove(It.IsAny<Board>(), moveDescriptor))
-                .Returns(MoveValidationResult.InvalidSrc);
+            var pieceFactoryMock = new Mock<IPieceFactory>();
+//            pieceFactoryMock
+//                .Setup(mock =>
+//                    mock.ValidateMove(It.IsAny<Board>(), moveDescriptor))
+//                .Returns(MoveValidationResult.InvalidSrc);
 
-            var board = new Board(moveValidationServiceMock.Object);
+            var board = new Board(pieceFactoryMock.Object);
 
             // act
             var result = board.TryCreateMove(moveDescriptor, out var move);
 
             // assert
-            moveValidationServiceMock.Verify(mock =>
-                mock.ValidateMove(board, moveDescriptor));
+//            pieceFactoryMock.Verify(mock =>
+//                mock.ValidateMove(board, moveDescriptor));
 
             result.Should().Be(false);
             move.Should().BeNull();
@@ -117,8 +117,8 @@ namespace Chess.Test.Unit.Domain.Models
         public void ToString_ShouldPrintTiles()
         {
             // arrange
-            var moveValidationServiceMock = new Mock<IMoveValidationService>();
-            var board = new Board(moveValidationServiceMock.Object);
+            var pieceFactoryMock = new Mock<IPieceFactory>();
+            var board = new Board(pieceFactoryMock.Object);
 
             // act
             var boardString = board.ToString();

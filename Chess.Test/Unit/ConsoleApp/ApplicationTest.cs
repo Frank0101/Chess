@@ -21,8 +21,8 @@ namespace Chess.Test.Unit.ConsoleApp
             const PiecesColor userColor = PiecesColor.Black;
             const int recursionLevel = 3;
 
-            var moveValidationServiceMock = new Mock<IMoveValidationService>();
-            var board = new Board(moveValidationServiceMock.Object);
+            var pieceFactoryMock = new Mock<IPieceFactory>();
+            var board = new Board(pieceFactoryMock.Object);
 
             var boardFactoryMock = new Mock<IBoardFactory>();
             boardFactoryMock
