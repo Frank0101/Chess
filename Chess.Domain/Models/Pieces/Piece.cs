@@ -2,7 +2,7 @@ using Chess.Domain.Enums;
 
 namespace Chess.Domain.Models.Pieces
 {
-    public abstract class Piece
+    public abstract class Piece : IPiece
     {
         public PiecesColor Color { get; }
         public char Symbol { get; }
@@ -15,7 +15,7 @@ namespace Chess.Domain.Models.Pieces
             Value = value;
         }
 
-        public abstract bool IsMoveValid(MoveDescriptor moveDescriptor);
+        public abstract bool IsMoveValid(MoveDescriptor moveDescriptor, bool eating);
 
         public override string ToString()
         {

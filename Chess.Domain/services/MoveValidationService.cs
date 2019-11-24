@@ -26,7 +26,7 @@ namespace Chess.Domain.Services
 
             bool IsMoveValid() => srcTile.Piece switch
             {
-                {} piece when piece.IsMoveValid(moveDescriptor) => true,
+                {} piece when piece.IsMoveValid(moveDescriptor, false) => true,
                 _ => false
             };
 

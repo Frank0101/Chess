@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AutoFixture" Version="4.11.0" />
         <PackageReference Include="FluentAssertions" Version="5.9.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
         <PackageReference Include="Moq" Version="4.13.1" />
@@ -17,6 +18,10 @@
     <ItemGroup>
       <ProjectReference Include="..\Chess.ConsoleApp\Chess.ConsoleApp.csproj" />
       <ProjectReference Include="..\Chess.Domain\Chess.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Unit\Domain\Factories" />
     </ItemGroup>
 
 </Project>
