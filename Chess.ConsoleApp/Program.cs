@@ -19,6 +19,7 @@ namespace Chess.ConsoleApp
                 .AddScoped<IGameFactory, GameFactory>()
                 .AddScoped<IBoardFactory, BoardFactory>()
                 .AddScoped<IMoveValidationService, MoveValidationService>()
+                .AddScoped<IConsoleWrapper, ConsoleWrapper>()
                 .AddScoped<IConsoleService, ConsoleService>()
                 .AddScoped<Application>()
                 .BuildServiceProvider();

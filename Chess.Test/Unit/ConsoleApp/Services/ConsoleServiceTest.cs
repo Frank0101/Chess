@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using System.Text;
 using Chess.ConsoleApp.Enums;
 using Chess.ConsoleApp.Services;
 using Chess.Domain.Enums;
@@ -18,39 +15,47 @@ namespace Chess.Test.Unit.ConsoleApp.Services
         public void DisplayTitle_ShouldDisplay()
         {
             // arrange
-            var stringWriter = SetConsoleOutput();
-            var sut = new ConsoleService();
+            var consoleWrapperMock = new Mock<IConsoleWrapper>();
+            var sut = new ConsoleService(consoleWrapperMock.Object);
 
             // act
             sut.DisplayTitle();
 
             // assert
-            stringWriter.ToString().Should().Be(@"
+            consoleWrapperMock.Verify(mock => mock.WriteLine(@"
    ____ _                     _   _      _   
   / ___| |__   ___  ___ ___  | \ | | ___| |_ 
  | |   | '_ \ / _ \/ __/ __| |  \| |/ _ \ __|
  | |___| | | |  __/\__ \__ \_| |\  |  __/ |_ 
   \____|_| |_|\___||___/___(_)_| \_|\___|\__|
-
-");
+"));
         }
 
         [Theory]
-        [InlineData("n", MainMenuSelection.NewGame)]
-        [InlineData("l", MainMenuSelection.LoadGame)]
-        public void RequestMainMenuSelection_ShouldHandleValidInput(string input, MainMenuSelection result)
+        [InlineData('n', MainMenuSelection.NewGame)]
+        [InlineData('l', MainMenuSelection.LoadGame)]
+        public void RequestMainMenuSelection_ShouldHandleValidInput(char key, MainMenuSelection result)
         {
             // arrange
-            var stringWriter = SetConsoleOutput();
-            var sut = new ConsoleService();
+            var consoleWrapperMock = new Mock<IConsoleWrapper>();
+            consoleWrapperMock
+                .Setup(mock => mock.ReadKey())
+                .Returns(key);
+
+            var sut = new ConsoleService(consoleWrapperMock.Object);
 
             // act
-            SetConsoleInput(input);
             var selection = sut.RequestMainMenuSelection();
 
             // assert
-            stringWriter.ToString().Should().Be(
-                "[n]ew game, [l]oad game: \n");
+            consoleWrapperMock.Verify(mock =>
+                mock.Write("[n]ew game, [l]oad game: "));
+
+            consoleWrapperMock.Verify(mock =>
+                mock.ReadKey());
+
+            consoleWrapperMock.Verify(mock =>
+                mock.WriteLine(""));
 
             selection.Should().Be(result);
         }
@@ -59,40 +64,61 @@ namespace Chess.Test.Unit.ConsoleApp.Services
         public void RequestMainMenuSelection_ShouldHandleWrongInput()
         {
             // arrange
-            var stringWriter = SetConsoleOutput();
-            var sut = new ConsoleService();
+            var consoleWrapperMock = new Mock<IConsoleWrapper>();
+            consoleWrapperMock
+                .SetupSequence(mock => mock.ReadKey())
+                .Returns('x')
+                .Returns('n');
+
+            var sut = new ConsoleService(consoleWrapperMock.Object);
 
             // act
-            SetConsoleInput("xn");
-            var result = sut.RequestMainMenuSelection();
+            var selection = sut.RequestMainMenuSelection();
 
             // assert
-            stringWriter.ToString().Should().Be(
-                "[n]ew game, [l]oad game: \n"
-                + "[n]ew game, [l]oad game: \n");
+            consoleWrapperMock.Verify(mock =>
+                mock.Write("[n]ew game, [l]oad game: "), Times.Exactly(2));
 
-            result.Should().Be(MainMenuSelection.NewGame);
+            consoleWrapperMock.Verify(mock =>
+                mock.ReadKey(), Times.Exactly(2));
+
+            consoleWrapperMock.Verify(mock =>
+                mock.WriteLine(""), Times.Exactly(2));
+
+            selection.Should().Be(MainMenuSelection.NewGame);
         }
 
         [Theory]
-        [InlineData("b3", PiecesColor.Black)]
-        [InlineData("w3", PiecesColor.White)]
-        public void RequestNewGameConfig_ShouldHandleValidInput(string input, PiecesColor userColor)
+        [InlineData('b', '3', PiecesColor.Black)]
+        [InlineData('w', '3', PiecesColor.White)]
+        public void RequestNewGameConfig_ShouldHandleValidInput(char key1, char key2, PiecesColor userColor)
         {
             // arrange
-            var stringWriter = SetConsoleOutput();
-            var sut = new ConsoleService();
-
             const int recursionLevel = 3;
 
+            var consoleWrapperMock = new Mock<IConsoleWrapper>();
+            consoleWrapperMock
+                .SetupSequence(mock => mock.ReadKey())
+                .Returns(key1)
+                .Returns(key2);
+
+            var sut = new ConsoleService(consoleWrapperMock.Object);
+
             // act
-            SetConsoleInput(input);
             var (configUserColor, configRecursionLevel) = sut.RequestNewGameConfig();
 
             // assert
-            stringWriter.ToString().Should().Be(
-                "[b]lack pieces, [w]hite pieces: \n"
-                + "recursion level (3 suggested): \n");
+            consoleWrapperMock.Verify(mock =>
+                mock.Write("[b]lack pieces, [w]hite pieces: "));
+
+            consoleWrapperMock.Verify(mock =>
+                mock.Write("recursion level (3 suggested): "));
+
+            consoleWrapperMock.Verify(mock =>
+                mock.ReadKey(), Times.Exactly(2));
+
+            consoleWrapperMock.Verify(mock =>
+                mock.WriteLine(""), Times.Exactly(2));
 
             configUserColor.Should().Be(userColor);
             configRecursionLevel.Should().Be(recursionLevel);
@@ -102,22 +128,34 @@ namespace Chess.Test.Unit.ConsoleApp.Services
         public void RequestNewGameConfig_ShouldHandleWrongInput()
         {
             // arrange
-            var stringWriter = SetConsoleOutput();
-            var sut = new ConsoleService();
-
             const int recursionLevel = 3;
 
+            var consoleWrapperMock = new Mock<IConsoleWrapper>();
+            consoleWrapperMock
+                .SetupSequence(mock => mock.ReadKey())
+                .Returns('x')
+                .Returns('b')
+                .Returns('x')
+                .Returns('0')
+                .Returns('3');
+
+            var sut = new ConsoleService(consoleWrapperMock.Object);
+
             // act
-            SetConsoleInput("xbx03");
             var (configUserColor, configRecursionLevel) = sut.RequestNewGameConfig();
 
             // assert
-            stringWriter.ToString().Should().Be(
-                "[b]lack pieces, [w]hite pieces: \n"
-                + "[b]lack pieces, [w]hite pieces: \n"
-                + "recursion level (3 suggested): \n"
-                + "recursion level (3 suggested): \n"
-                + "recursion level (3 suggested): \n");
+            consoleWrapperMock.Verify(mock =>
+                mock.Write("[b]lack pieces, [w]hite pieces: "), Times.Exactly(2));
+
+            consoleWrapperMock.Verify(mock =>
+                mock.Write("recursion level (3 suggested): "), Times.Exactly(3));
+
+            consoleWrapperMock.Verify(mock =>
+                mock.ReadKey(), Times.Exactly(5));
+
+            consoleWrapperMock.Verify(mock =>
+                mock.WriteLine(""), Times.Exactly(5));
 
             configUserColor.Should().Be(PiecesColor.Black);
             configRecursionLevel.Should().Be(recursionLevel);
@@ -127,8 +165,8 @@ namespace Chess.Test.Unit.ConsoleApp.Services
         public void DisplayBoard_GivenBlackFrontColor_ShouldDisplay()
         {
             // arrange
-            var stringWriter = SetConsoleOutput();
-            var sut = new ConsoleService();
+            var consoleWrapperMock = new Mock<IConsoleWrapper>();
+            var sut = new ConsoleService(consoleWrapperMock.Object);
 
             var moveValidationServiceMock = new Mock<IMoveValidationService>();
             var board = new Board(moveValidationServiceMock.Object);
@@ -137,7 +175,7 @@ namespace Chess.Test.Unit.ConsoleApp.Services
             sut.DisplayBoard(board, PiecesColor.Black);
 
             // assert
-            stringWriter.ToString().Should().Be(@"
+            consoleWrapperMock.Verify(mock => mock.WriteLine(@"
 1  R  N  B  K  Q  B  N  R 
 2  P  P  P  P  P  P  P  P 
 3                         
@@ -147,15 +185,15 @@ namespace Chess.Test.Unit.ConsoleApp.Services
 7  p  p  p  p  p  p  p  p 
 8  r  n  b  k  q  b  n  r 
    h  g  f  e  d  c  b  a
-");
+"));
         }
 
         [Fact]
         public void DisplayBoard_GivenWhiteFrontColor_ShouldDisplay()
         {
             // arrange
-            var stringWriter = SetConsoleOutput();
-            var sut = new ConsoleService();
+            var consoleWrapperMock = new Mock<IConsoleWrapper>();
+            var sut = new ConsoleService(consoleWrapperMock.Object);
 
             var moveValidationServiceMock = new Mock<IMoveValidationService>();
             var board = new Board(moveValidationServiceMock.Object);
@@ -164,7 +202,7 @@ namespace Chess.Test.Unit.ConsoleApp.Services
             sut.DisplayBoard(board, PiecesColor.White);
 
             // assert
-            stringWriter.ToString().Should().Be(@"
+            consoleWrapperMock.Verify(mock => mock.WriteLine(@"
 8  r  n  b  q  k  b  n  r 
 7  p  p  p  p  p  p  p  p 
 6                         
@@ -174,23 +212,7 @@ namespace Chess.Test.Unit.ConsoleApp.Services
 2  P  P  P  P  P  P  P  P 
 1  R  N  B  Q  K  B  N  R 
    a  b  c  d  e  f  g  h
-");
-        }
-
-        private static void SetConsoleInput(string input)
-        {
-            var strReader = new StreamReader(new MemoryStream(
-                Encoding.UTF8.GetBytes(input)));
-
-            Console.SetIn(strReader);
-        }
-
-        private static StringWriter SetConsoleOutput()
-        {
-            var stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);
-
-            return stringWriter;
+"));
         }
     }
 }

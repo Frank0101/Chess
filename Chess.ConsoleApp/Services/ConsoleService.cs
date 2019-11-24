@@ -9,9 +9,16 @@ namespace Chess.ConsoleApp.Services
 {
     public class ConsoleService : IConsoleService
     {
+        private readonly IConsoleWrapper _consoleWrapper;
+
+        public ConsoleService(IConsoleWrapper consoleWrapper)
+        {
+            _consoleWrapper = consoleWrapper;
+        }
+
         public void DisplayTitle()
         {
-            Console.WriteLine(@"
+            _consoleWrapper.WriteLine(@"
    ____ _                     _   _      _   
   / ___| |__   ___  ___ ___  | \ | | ___| |_ 
  | |   | '_ \ / _ \/ __/ __| |  \| |/ _ \ __|
@@ -64,13 +71,13 @@ namespace Chess.ConsoleApp.Services
                     ? 8 - counter - 1
                     : counter;
 
-            Console.WriteLine();
+            _consoleWrapper.WriteLine();
 
             for (var rowCounter = 0; rowCounter < 8; rowCounter++)
             {
                 var rowIndex = ConvertCounterToIndex(rowCounter);
 
-                Console.Write($"{8 - rowIndex} ");
+                _consoleWrapper.Write($"{8 - rowIndex} ");
 
                 for (var colCounter = 0; colCounter < 8; colCounter++)
                 {
@@ -78,23 +85,23 @@ namespace Chess.ConsoleApp.Services
 
                     if (board[rowIndex, colIndex].Piece is {} piece)
                     {
-                        Console.ForegroundColor = piece.Color == PiecesColor.Black
+                        _consoleWrapper.SetForegroundColor(piece.Color == PiecesColor.Black
                             ? blackPiecesColor
-                            : whitePiecesColor;
+                            : whitePiecesColor);
                     }
 
-                    Console.BackgroundColor = (rowIndex + colIndex) % 2 == 1
+                    _consoleWrapper.SetBackgroundColor((rowIndex + colIndex) % 2 == 1
                         ? blackTilesColor
-                        : whiteTilesColor;
+                        : whiteTilesColor);
 
-                    Console.Write($" {board[rowIndex, colIndex]} ");
+                    _consoleWrapper.Write($" {board[rowIndex, colIndex]} ");
                 }
 
-                Console.ResetColor();
-                Console.WriteLine();
+                _consoleWrapper.ResetColor();
+                _consoleWrapper.WriteLine();
             }
 
-            Console.WriteLine(frontColor == PiecesColor.Black
+            _consoleWrapper.WriteLine(frontColor == PiecesColor.Black
                 ? "   h  g  f  e  d  c  b  a"
                 : "   a  b  c  d  e  f  g  h"
             );
@@ -102,18 +109,18 @@ namespace Chess.ConsoleApp.Services
 
         public MoveSelection TryRequestMoveSelection(Board board, out Move? move)
         {
-            Console.WriteLine();
-            Console.WriteLine("move: e.g. \"a1b2\"");
-            Console.WriteLine("save game: \"save\"");
-            Console.WriteLine("exit game: \"exit\"");
+            _consoleWrapper.WriteLine();
+            _consoleWrapper.WriteLine("move: e.g. \"a1b2\"");
+            _consoleWrapper.WriteLine("save game: \"save\"");
+            _consoleWrapper.WriteLine("exit game: \"exit\"");
 
             while (true)
             {
-                Console.Write("command> ");
+                _consoleWrapper.Write("command> ");
 
                 move = null;
 
-                switch (Console.ReadLine() ?? "")
+                switch (_consoleWrapper.ReadLine() ?? "")
                 {
                     case var moveStr when Regex.IsMatch(moveStr, "[a-h][1-8][a-h][1-8]"):
                         int InvertIndex(int index) => 8 - index - 1;
@@ -128,19 +135,19 @@ namespace Chess.ConsoleApp.Services
                         switch (board.TryCreateMove(moveDescriptor, out move))
                         {
                             case MoveValidationResult.InvalidSrc:
-                                Console.WriteLine("invalid source");
+                                _consoleWrapper.WriteLine("invalid source");
                                 continue;
 
                             case MoveValidationResult.InvalidDst:
-                                Console.WriteLine("invalid destination");
+                                _consoleWrapper.WriteLine("invalid destination");
                                 continue;
 
                             case MoveValidationResult.InvalidMove:
-                                Console.WriteLine("invalid movement for piece");
+                                _consoleWrapper.WriteLine("invalid movement for piece");
                                 continue;
 
                             case MoveValidationResult.InvalidPath:
-                                Console.WriteLine("the path is obstructed");
+                                _consoleWrapper.WriteLine("the path is obstructed");
                                 continue;
 
                             case MoveValidationResult.Valid:
@@ -157,17 +164,17 @@ namespace Chess.ConsoleApp.Services
                         return MoveSelection.ExitGame;
 
                     default:
-                        Console.WriteLine("invalid command");
+                        _consoleWrapper.WriteLine("invalid command");
                         continue;
                 }
             }
         }
 
-        private static char RequestKey(string prompt)
+        private char RequestKey(string prompt)
         {
-            Console.Write($"{prompt}: ");
-            var key = (char) Console.Read();
-            Console.WriteLine();
+            _consoleWrapper.Write($"{prompt}: ");
+            var key = _consoleWrapper.ReadKey();
+            _consoleWrapper.WriteLine();
             return key;
         }
     }
