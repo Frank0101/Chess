@@ -23,14 +23,14 @@ namespace Chess.Test.Unit.Domain.Models.Pieces
         }
 
         [Theory]
-        [InlineData(3, 3, 1, 4)]
         [InlineData(3, 3, 1, 2)]
+        [InlineData(3, 3, 1, 4)]
         [InlineData(3, 3, 2, 5)]
         [InlineData(3, 3, 4, 5)]
         [InlineData(3, 3, 5, 4)]
         [InlineData(3, 3, 5, 2)]
-        [InlineData(3, 3, 2, 1)]
         [InlineData(3, 3, 4, 1)]
+        [InlineData(3, 3, 2, 1)]
         public void IsMoveValid_GivenValidMove_ShouldReturnTrue(
             int srcRow, int srcCol, int dstRow, int dstCol)
         {

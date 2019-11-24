@@ -1,3 +1,4 @@
+using System;
 using Chess.Domain.Enums;
 
 namespace Chess.Domain.Models.Pieces
@@ -9,9 +10,8 @@ namespace Chess.Domain.Models.Pieces
         {
         }
 
-        public override bool IsMoveValid(MoveDescriptor moveDescriptor, bool eating)
-        {
-            return true;
-        }
+        public override bool IsMoveValid(MoveDescriptor moveDescriptor, bool eating) =>
+            Math.Abs(moveDescriptor.DstRow - moveDescriptor.SrcRow) <= 1
+            && Math.Abs(moveDescriptor.DstCol - moveDescriptor.SrcCol) <= 1;
     }
 }

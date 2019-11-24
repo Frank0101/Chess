@@ -11,7 +11,7 @@ namespace Chess.Domain.Models.Pieces
         }
 
         public override bool IsMoveValid(MoveDescriptor moveDescriptor, bool eating) =>
-            Math.Abs(moveDescriptor.SrcRow - moveDescriptor.DstRow)
-            == Math.Abs(moveDescriptor.SrcCol - moveDescriptor.DstCol);
+            Math.Abs(moveDescriptor.DstRow - moveDescriptor.SrcRow)
+            == Math.Abs(moveDescriptor.DstCol - moveDescriptor.SrcCol);
     }
 }

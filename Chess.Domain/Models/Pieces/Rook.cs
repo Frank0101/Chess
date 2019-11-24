@@ -11,7 +11,11 @@ namespace Chess.Domain.Models.Pieces
 
         public override bool IsMoveValid(MoveDescriptor moveDescriptor, bool eating)
         {
-            return true;
+            var deltaRow = moveDescriptor.DstRow - moveDescriptor.SrcRow;
+            var deltaCol = moveDescriptor.DstCol - moveDescriptor.SrcCol;
+
+            return deltaRow == 0 && deltaCol != 0
+                   || deltaRow != 0 && deltaCol == 0;
         }
     }
 }
