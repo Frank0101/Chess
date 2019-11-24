@@ -20,8 +20,4 @@
       <ProjectReference Include="..\Chess.Domain\Chess.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Unit\Domain\Factories" />
-    </ItemGroup>
-
 </Project>
