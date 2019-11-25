@@ -5,7 +5,7 @@ namespace Chess.Domain.Models.Players
 {
     public class UserPlayer : Player
     {
-        public event Func<Board, Move?>? MoveRequested;
+        public event Func<Board, IMove?>? MoveRequested;
 
         public UserPlayer(PiecesColor color) : base(color)
         {

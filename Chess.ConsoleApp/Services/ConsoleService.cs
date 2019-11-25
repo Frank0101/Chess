@@ -107,7 +107,7 @@ namespace Chess.ConsoleApp.Services
             );
         }
 
-        public MoveSelection TryRequestMoveSelection(Board board, out Move? move)
+        public MoveSelection TryRequestMoveSelection(Board board, out IMove? move)
         {
             _consoleWrapper.WriteLine();
             _consoleWrapper.WriteLine("move: e.g. \"a1b2\"");
