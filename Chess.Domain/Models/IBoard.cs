@@ -5,6 +5,8 @@ namespace Chess.Domain.Models
     public interface IBoard
     {
         PiecesColor TurnColor { get; }
+        int TurnIndex { get; }
+
         Tile this[int row, int col] { get; }
 
         MoveValidationResult TryCreateMove(MoveDescriptor moveDescriptor, out Move? move);

@@ -1,7 +1,7 @@
-using Chess.Domain.Enums;
 using Chess.Domain.Models;
 using Chess.Domain.Models.Pieces;
 using FluentAssertions;
+using Moq;
 using Xunit;
 
 namespace Chess.Test.Unit.Domain.Models
@@ -22,13 +22,13 @@ namespace Chess.Test.Unit.Domain.Models
         public void Constructor_GivenPiece_ShouldCreateTileWithPiece()
         {
             // arrange
-            var piece = new Pawn(PiecesColor.Black);
+            var pieceMock = new Mock<IPiece>();
 
             // act
-            var tile = new Tile(piece);
+            var tile = new Tile(pieceMock.Object);
 
             // assert
-            tile.Piece.Should().Be(piece);
+            tile.Piece.Should().Be(pieceMock.Object);
         }
 
         [Fact]
@@ -36,13 +36,13 @@ namespace Chess.Test.Unit.Domain.Models
         {
             // arrange
             var tile = new Tile(null);
-            var piece = new Pawn(PiecesColor.Black);
+            var pieceMock = new Mock<IPiece>();
 
             // act
-            tile.Piece = piece;
+            tile.Piece = pieceMock.Object;
 
             // assert
-            tile.Piece.Should().Be(piece);
+            tile.Piece.Should().Be(pieceMock.Object);
         }
 
         [Fact]
@@ -62,14 +62,17 @@ namespace Chess.Test.Unit.Domain.Models
         public void ToString_GivenTileWithPiece_ShouldPrintPiece()
         {
             // arrange
-            var piece = new Pawn(PiecesColor.Black);
-            var tile = new Tile(new Pawn(PiecesColor.Black));
+            var pieceMock = new Mock<IPiece>();
+            pieceMock.Setup(mock =>
+                mock.ToString()).Returns("P");
+
+            var tile = new Tile(pieceMock.Object);
 
             // act
             var tileString = tile.ToString();
 
             // assert
-            tileString.Should().Be(piece.ToString());
+            tileString.Should().Be("P");
         }
     }
 }

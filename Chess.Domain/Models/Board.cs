@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using Chess.Domain.Enums;
 using Chess.Domain.Factories;
@@ -7,11 +8,13 @@ namespace Chess.Domain.Models
 {
     public class Board : IBoard
     {
+        private readonly Tile[,] _tiles = new Tile[8, 8];
+        private readonly Queue<Move> _moves = new Queue<Move>();
+
         private readonly IPieceFactory _pieceFactory;
 
-        private readonly Tile[,] _tiles = new Tile[8, 8];
-
         public PiecesColor TurnColor { get; private set; }
+        public int TurnIndex { get; private set; }
 
         public Tile this[int row, int col] => _tiles[row, col];
 
@@ -38,6 +41,11 @@ namespace Chess.Domain.Models
 
         public void ApplyMove(Move move)
         {
+            _moves.Enqueue(move);
+
+            move.DstTile.Piece = move.SrcTile.Piece;
+            move.SrcTile.Piece = null;
+
             TurnColor = TurnColor.Invert();
         }
 
@@ -70,14 +78,14 @@ namespace Chess.Domain.Models
                     case 0:
                     case 7:
                     {
-                        _tiles[row, 0] = new Tile(new Rook(color));
-                        _tiles[row, 1] = new Tile(new Knight(color));
-                        _tiles[row, 2] = new Tile(new Bishop(color));
-                        _tiles[row, 3] = new Tile(new Queen(color));
-                        _tiles[row, 4] = new Tile(new King(color));
-                        _tiles[row, 5] = new Tile(new Bishop(color));
-                        _tiles[row, 6] = new Tile(new Knight(color));
-                        _tiles[row, 7] = new Tile(new Rook(color));
+                        _tiles[row, 0] = new Tile(_pieceFactory.CreateRook(color));
+                        _tiles[row, 1] = new Tile(_pieceFactory.CreateKnight(color));
+                        _tiles[row, 2] = new Tile(_pieceFactory.CreateBishop(color));
+                        _tiles[row, 3] = new Tile(_pieceFactory.CreateQueen(color));
+                        _tiles[row, 4] = new Tile(_pieceFactory.CreateKing(color));
+                        _tiles[row, 5] = new Tile(_pieceFactory.CreateBishop(color));
+                        _tiles[row, 6] = new Tile(_pieceFactory.CreateKnight(color));
+                        _tiles[row, 7] = new Tile(_pieceFactory.CreateRook(color));
 
                         break;
                     }
@@ -86,7 +94,7 @@ namespace Chess.Domain.Models
                     {
                         for (var col = 0; col < 8; col++)
                         {
-                            _tiles[row, col] = new Tile(new Pawn(color));
+                            _tiles[row, col] = new Tile(_pieceFactory.CreatePawn(color));
                         }
 
                         break;
@@ -109,36 +117,61 @@ namespace Chess.Domain.Models
             var srcTile = _tiles[moveDescriptor.SrcRow, moveDescriptor.SrcCol];
             var dstTile = _tiles[moveDescriptor.DstRow, moveDescriptor.DstCol];
 
-            bool IsSrcValid() => srcTile.Piece switch
+            if (srcTile.Piece != null && srcTile.Piece.Color == TurnColor)
             {
-                {} piece when piece.Color == TurnColor => true,
-                _ => false
-            };
+                if (dstTile.Piece == null || dstTile.Piece.Color != TurnColor)
+                {
+                    var eating = dstTile.Piece != null;
+                    if (srcTile.Piece.IsMoveValid(moveDescriptor, eating))
+                    {
+                        if (srcTile.Piece is Knight || ValidatePath(moveDescriptor))
+                        {
+                            return MoveValidationResult.Valid;
+                        }
 
-            bool IsDstValid() => dstTile.Piece switch
+                        return MoveValidationResult.InvalidPath;
+                    }
+
+                    return MoveValidationResult.InvalidMove;
+                }
+
+                return MoveValidationResult.InvalidDst;
+            }
+
+            return MoveValidationResult.InvalidSrc;
+        }
+
+        private bool ValidatePath(MoveDescriptor moveDescriptor)
+        {
+            var incRow = moveDescriptor.SrcRow < moveDescriptor.DstRow ? 1 : -1;
+            var incCol = moveDescriptor.SrcCol < moveDescriptor.DstCol ? 1 : -1;
+
+            if (incCol != 0)
             {
-                null => true,
-                {} piece when piece.Color != TurnColor => true,
-                _ => false
-            };
+                var row = moveDescriptor.SrcRow + incRow;
+                for (var col = moveDescriptor.SrcCol + incCol; col != moveDescriptor.DstCol; col += incCol)
+                {
+                    if (_tiles[row, col].Piece != null)
+                    {
+                        return false;
+                    }
 
-            bool IsMoveValid() => srcTile.Piece switch
+                    row += incRow;
+                }
+            }
+            else
             {
-                {} piece when piece.IsMoveValid(moveDescriptor, false) => true,
-                _ => false
-            };
+                var col = moveDescriptor.SrcCol;
+                for (var row = moveDescriptor.SrcRow + incRow; row != moveDescriptor.DstRow; row += incRow)
+                {
+                    if (_tiles[row, col].Piece != null)
+                    {
+                        return false;
+                    }
+                }
+            }
 
-            bool IsPathValid() => srcTile.Piece switch
-            {
-                Knight _ => true,
-                _ => false
-            };
-
-            if (!IsSrcValid()) return MoveValidationResult.InvalidSrc;
-            if (!IsDstValid()) return MoveValidationResult.InvalidDst;
-            if (!IsMoveValid()) return MoveValidationResult.InvalidMove;
-            if (!IsPathValid()) return MoveValidationResult.InvalidPath;
-            return MoveValidationResult.Valid;
+            return true;
         }
     }
 }
