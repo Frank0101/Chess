@@ -6,7 +6,7 @@ namespace Chess.Domain.Models
     public class Move : IMove
     {
         public IBoard Board { get; }
-        public int TurnIndex { get; private set; }
+        public int TurnIndex { get; }
         public Tile SrcTile { get; }
         public Tile DstTile { get; }
         public IPiece? EatenPiece { get; private set; }

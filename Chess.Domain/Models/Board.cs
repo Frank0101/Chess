@@ -9,44 +9,57 @@ namespace Chess.Domain.Models
     public class Board : IBoard
     {
         private readonly Tile[,] _tiles = new Tile[8, 8];
-        private readonly Queue<Move> _moves = new Queue<Move>();
+        private readonly Queue<IMove> _moves = new Queue<IMove>();
 
         private readonly IPieceFactory _pieceFactory;
+        private readonly IMoveFactory _moveFactory;
 
         public PiecesColor TurnColor { get; private set; }
         public int TurnIndex { get; private set; }
 
         public Tile this[int row, int col] => _tiles[row, col];
 
-        public Board(IPieceFactory pieceFactory)
+        public Board(IPieceFactory pieceFactory, IMoveFactory moveFactory)
         {
             _pieceFactory = pieceFactory;
+            _moveFactory = moveFactory;
 
             TurnColor = PiecesColor.White;
             InitPieces();
         }
 
-        public MoveValidationResult TryCreateMove(MoveDescriptor moveDescriptor, out Move? move)
+        public MoveValidationResult TryCreateMove(MoveDescriptor moveDescriptor, out IMove? move)
         {
             move = null;
 
             var moveValidationResult = ValidateMove(moveDescriptor);
             if (moveValidationResult == MoveValidationResult.Valid)
             {
-                move = new Move(this, moveDescriptor);
+                move = _moveFactory.Create(this, moveDescriptor);
             }
 
             return moveValidationResult;
         }
 
-        public void ApplyMove(Move move)
+        public void ApplyMove(IMove move)
         {
+            move.Apply();
+
             _moves.Enqueue(move);
 
-            move.DstTile.Piece = move.SrcTile.Piece;
-            move.SrcTile.Piece = null;
-
             TurnColor = TurnColor.Invert();
+            TurnIndex++;
+        }
+
+        public IMove UndoLastMove()
+        {
+            TurnIndex--;
+            TurnColor = TurnColor.Invert();
+
+            var move = _moves.Dequeue();
+
+            move.Undo();
+            return move;
         }
 
         public override string ToString()
