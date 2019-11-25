@@ -5,26 +5,27 @@ namespace Chess.Domain.Models
 {
     public class Move : IMove
     {
-        public IBoard Board { get; }
-        public int TurnIndex { get; }
+        private readonly IBoard _board;
+        private readonly int _turnIndex;
+        private IPiece? _eatenPiece;
+
         public Tile SrcTile { get; }
         public Tile DstTile { get; }
-        public IPiece? EatenPiece { get; private set; }
 
         public Move(IBoard board, MoveDescriptor moveDescriptor)
         {
-            Board = board;
-            TurnIndex = Board.TurnIndex;
+            _board = board;
+            _turnIndex = _board.TurnIndex;
 
-            SrcTile = Board[moveDescriptor.SrcRow, moveDescriptor.SrcCol];
-            DstTile = Board[moveDescriptor.DstRow, moveDescriptor.DstCol];
+            SrcTile = _board[moveDescriptor.SrcRow, moveDescriptor.SrcCol];
+            DstTile = _board[moveDescriptor.DstRow, moveDescriptor.DstCol];
         }
 
         public void Apply()
         {
-            if (Board.TurnIndex == TurnIndex)
+            if (_board.TurnIndex == _turnIndex)
             {
-                EatenPiece = DstTile.Piece;
+                _eatenPiece = DstTile.Piece;
                 DstTile.Piece = SrcTile.Piece;
                 SrcTile.Piece = null;
             }
@@ -36,11 +37,11 @@ namespace Chess.Domain.Models
 
         public void Undo()
         {
-            if (Board.TurnIndex == TurnIndex)
+            if (_board.TurnIndex == _turnIndex)
             {
                 SrcTile.Piece = DstTile.Piece;
-                DstTile.Piece = EatenPiece;
-                EatenPiece = null;
+                DstTile.Piece = _eatenPiece;
+                _eatenPiece = null;
             }
             else
             {
