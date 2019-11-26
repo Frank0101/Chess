@@ -9,7 +9,7 @@ namespace Chess.Test.Unit.Domain.Factories
     public class PieceFactoryTest
     {
         [Fact]
-        public void CreatePawn_ShouldCreatePawn()
+        public void CreatePawn_GivenColor_ShouldCreatePawn()
         {
             // arrange
             var sut = new PieceFactory();
@@ -19,10 +19,11 @@ namespace Chess.Test.Unit.Domain.Factories
 
             // assert
             pawn.Should().BeOfType<Pawn>();
+            pawn.Color.Should().Be(PiecesColor.Black);
         }
 
         [Fact]
-        public void CreateBishop_ShouldCreateBishop()
+        public void CreateBishop_GivenColor_ShouldCreateBishop()
         {
             // arrange
             var sut = new PieceFactory();
@@ -32,10 +33,11 @@ namespace Chess.Test.Unit.Domain.Factories
 
             // assert
             bishop.Should().BeOfType<Bishop>();
+            bishop.Color.Should().Be(PiecesColor.Black);
         }
 
         [Fact]
-        public void CreateKnight_ShouldCreateKnight()
+        public void CreateKnight_GivenColor_ShouldCreateKnight()
         {
             // arrange
             var sut = new PieceFactory();
@@ -45,10 +47,11 @@ namespace Chess.Test.Unit.Domain.Factories
 
             // assert
             knight.Should().BeOfType<Knight>();
+            knight.Color.Should().Be(PiecesColor.Black);
         }
 
         [Fact]
-        public void CreateRook_ShouldCreateRook()
+        public void CreateRook_GivenColor_ShouldCreateRook()
         {
             // arrange
             var sut = new PieceFactory();
@@ -58,10 +61,11 @@ namespace Chess.Test.Unit.Domain.Factories
 
             // assert
             rook.Should().BeOfType<Rook>();
+            rook.Color.Should().Be(PiecesColor.Black);
         }
 
         [Fact]
-        public void CreateQueen_ShouldCreateQueen()
+        public void CreateQueen_GivenColor_ShouldCreateQueen()
         {
             // arrange
             var sut = new PieceFactory();
@@ -71,10 +75,11 @@ namespace Chess.Test.Unit.Domain.Factories
 
             // assert
             queen.Should().BeOfType<Queen>();
+            queen.Color.Should().Be(PiecesColor.Black);
         }
 
         [Fact]
-        public void CreateKing_ShouldCreateKing()
+        public void CreateKing_GivenColor_ShouldCreateKing()
         {
             // arrange
             var sut = new PieceFactory();
@@ -84,6 +89,7 @@ namespace Chess.Test.Unit.Domain.Factories
 
             // assert
             king.Should().BeOfType<King>();
+            king.Color.Should().Be(PiecesColor.Black);
         }
     }
 }
