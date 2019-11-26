@@ -77,10 +77,11 @@ namespace Chess.Test.Unit.Domain.Models
             boardMock.Setup(mock => mock[dstRow, dstCol]).Returns(dstTile);
 
             var move = new Move(boardMock.Object, moveDescriptor);
-            Action apply = () => { move.Apply(); };
 
-            // act
             boardMock.Setup(mock => mock.TurnIndex).Returns(1);
+
+            // assert
+            Action apply = () => { move.Apply(); };
             apply.Should().Throw<InvalidOperationException>();
 
             srcTile.Piece.Should().Be(srcPiece);
@@ -104,7 +105,6 @@ namespace Chess.Test.Unit.Domain.Models
             boardMock.Setup(mock => mock[dstRow, dstCol]).Returns(dstTile);
 
             var move = new Move(boardMock.Object, moveDescriptor);
-
             move.Apply();
 
             // act
@@ -132,12 +132,12 @@ namespace Chess.Test.Unit.Domain.Models
             boardMock.Setup(mock => mock[dstRow, dstCol]).Returns(dstTile);
 
             var move = new Move(boardMock.Object, moveDescriptor);
-            Action undo = () => { move.Undo(); };
-
             move.Apply();
 
-            // act
             boardMock.Setup(mock => mock.TurnIndex).Returns(1);
+
+            // assert
+            Action undo = () => { move.Undo(); };
             undo.Should().Throw<InvalidOperationException>();
 
             srcTile.Piece.Should().BeNull();

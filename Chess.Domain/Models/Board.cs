@@ -156,8 +156,15 @@ namespace Chess.Domain.Models
 
         private bool ValidatePath(MoveDescriptor moveDescriptor)
         {
-            var incRow = moveDescriptor.SrcRow < moveDescriptor.DstRow ? 1 : -1;
-            var incCol = moveDescriptor.SrcCol < moveDescriptor.DstCol ? 1 : -1;
+            int GetIncrement(int value) => value switch
+            {
+                var result when result > 0 => 1,
+                var result when result < 0 => -1,
+                _ => 0
+            };
+
+            var incRow = GetIncrement(moveDescriptor.DstRow - moveDescriptor.SrcRow);
+            var incCol = GetIncrement(moveDescriptor.DstCol - moveDescriptor.SrcCol);
 
             if (incCol != 0)
             {
