@@ -18,6 +18,7 @@ namespace Chess.Test.Unit.Domain.Factories
             var pawn = sut.CreatePawn(PiecesColor.Black);
 
             // assert
+            pawn.Should().NotBeNull();
             pawn.Should().BeOfType<Pawn>();
             pawn.Color.Should().Be(PiecesColor.Black);
         }
@@ -32,6 +33,7 @@ namespace Chess.Test.Unit.Domain.Factories
             var bishop = sut.CreateBishop(PiecesColor.Black);
 
             // assert
+            bishop.Should().NotBeNull();
             bishop.Should().BeOfType<Bishop>();
             bishop.Color.Should().Be(PiecesColor.Black);
         }
@@ -46,6 +48,7 @@ namespace Chess.Test.Unit.Domain.Factories
             var knight = sut.CreateKnight(PiecesColor.Black);
 
             // assert
+            knight.Should().NotBeNull();
             knight.Should().BeOfType<Knight>();
             knight.Color.Should().Be(PiecesColor.Black);
         }
@@ -60,6 +63,7 @@ namespace Chess.Test.Unit.Domain.Factories
             var rook = sut.CreateRook(PiecesColor.Black);
 
             // assert
+            rook.Should().NotBeNull();
             rook.Should().BeOfType<Rook>();
             rook.Color.Should().Be(PiecesColor.Black);
         }
@@ -74,6 +78,7 @@ namespace Chess.Test.Unit.Domain.Factories
             var queen = sut.CreateQueen(PiecesColor.Black);
 
             // assert
+            queen.Should().NotBeNull();
             queen.Should().BeOfType<Queen>();
             queen.Color.Should().Be(PiecesColor.Black);
         }
@@ -88,6 +93,7 @@ namespace Chess.Test.Unit.Domain.Factories
             var king = sut.CreateKing(PiecesColor.Black);
 
             // assert
+            king.Should().NotBeNull();
             king.Should().BeOfType<King>();
             king.Color.Should().Be(PiecesColor.Black);
         }
