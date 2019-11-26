@@ -2,7 +2,7 @@ using Chess.Domain.Enums;
 
 namespace Chess.Domain.Models.Players
 {
-    public abstract class Player
+    public abstract class Player : IPlayer
     {
         public PiecesColor Color { get; }
 
@@ -11,6 +11,6 @@ namespace Chess.Domain.Models.Players
             Color = color;
         }
 
-        public abstract bool TryMove(Board board);
+        public abstract bool TryGetMove(IBoard board, out IMove move);
     }
 }

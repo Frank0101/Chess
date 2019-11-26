@@ -11,8 +11,9 @@ namespace Chess.Domain.Models.Players
             RecursionLevel = recursionLevel;
         }
 
-        public override bool TryMove(Board board)
+        public override bool TryGetMove(IBoard board, out IMove move)
         {
+            move = null;
             return false;
         }
     }

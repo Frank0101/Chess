@@ -5,16 +5,16 @@ namespace Chess.Domain.Models.Players
 {
     public class UserPlayer : Player
     {
-        public event Func<Board, IMove?>? MoveRequested;
+        public event Func<IBoard, IMove?>? MoveRequested;
 
         public UserPlayer(PiecesColor color) : base(color)
         {
         }
 
-        public override bool TryMove(Board board)
+        public override bool TryGetMove(IBoard board, out IMove move)
         {
-            var move = MoveRequested?.Invoke(board);
-            return false;
+            move = MoveRequested?.Invoke(board);
+            return move != null;
         }
     }
 }

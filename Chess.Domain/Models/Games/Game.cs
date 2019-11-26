@@ -35,7 +35,7 @@ namespace Chess.Domain.Models.Games
                     ? Player1
                     : Player2;
 
-                if (turnPlayer.TryMove(Board))
+                if (turnPlayer.TryGetMove(Board, out var move))
                 {
                 }
                 else
