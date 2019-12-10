@@ -10,7 +10,7 @@ namespace Chess.ConsoleApp.Services
         void DisplayTitle();
         MainMenuSelection RequestMainMenuSelection();
         NewGameConfig RequestNewGameConfig();
-        void DisplayBoard(Board board, PiecesColor frontColor);
-        MoveSelection TryRequestMoveSelection(Board board, out IMove? move);
+        void DisplayBoard(IBoard board, PiecesColor frontColor);
+        MoveSelection TryRequestMoveSelection(IBoard board, out IMove? move);
     }
 }

@@ -5,10 +5,10 @@ namespace Chess.Domain.Factories
 {
     public class PlayerFactory : IPlayerFactory
     {
-        public IPlayer CreateUserPlayer(PiecesColor color) =>
+        public IUserPlayer CreateUserPlayer(PiecesColor color) =>
             new UserPlayer(color);
 
-        public IPlayer CreateCpuPlayer(PiecesColor color, int recursionLevel) =>
+        public ICpuPlayer CreateCpuPlayer(PiecesColor color, int recursionLevel) =>
             new CpuPlayer(color, recursionLevel);
     }
 }

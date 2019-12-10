@@ -3,7 +3,7 @@ using Chess.Domain.Enums;
 
 namespace Chess.Domain.Models.Players
 {
-    public class UserPlayer : Player
+    public class UserPlayer : Player, IUserPlayer
     {
         public event Func<IBoard, IMove?>? MoveRequested;
 

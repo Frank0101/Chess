@@ -7,12 +7,12 @@ using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace Chess.Test.Unit.Domain.Models.Games
+namespace Chess.Test.Unit.Domain.Factories
 {
-    public class UserVsCpuGameTest
+    public class GameFactoryTest
     {
         [Fact]
-        public void Constructor_GivenParameters_ShouldCreate()
+        public void CreateUserVsCpuGame_GivenColorAndRecursion_ShouldCreateGame()
         {
             // arrange
             const PiecesColor userColor = PiecesColor.Black;
@@ -38,11 +38,14 @@ namespace Chess.Test.Unit.Domain.Models.Games
                 .Setup(mock => mock.CreateCpuPlayer(userColor.Invert(), recursionLevel))
                 .Returns(cpuPlayerMock.Object);
 
+            var sut = new GameFactory(boardFactoryMock.Object, playerFactoryMock.Object);
+
             // act
-            var game = new UserVsCpuGame(boardFactoryMock.Object, playerFactoryMock.Object,
-                userColor, recursionLevel);
+            var game = sut.CreateUserVsCpuGame(userColor, recursionLevel);
 
             // assert
+            game.Should().NotBeNull();
+            game.Should().BeOfType<UserVsCpuGame>();
             game.Board.Should().Be(boardMock.Object);
             game.UserPlayer.Should().Be(userPlayerMock.Object);
             game.CpuPlayer.Should().Be(cpuPlayerMock.Object);

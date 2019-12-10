@@ -4,6 +4,6 @@ namespace Chess.Domain.Factories
 {
     public interface IBoardFactory
     {
-        Board Create();
+        IBoard Create();
     }
 }

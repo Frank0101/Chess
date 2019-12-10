@@ -5,7 +5,7 @@ namespace Chess.Domain.Factories
 {
     public interface IPlayerFactory
     {
-        IPlayer CreateUserPlayer(PiecesColor color);
-        IPlayer CreateCpuPlayer(PiecesColor color, int recursionLevel);
+        IUserPlayer CreateUserPlayer(PiecesColor color);
+        ICpuPlayer CreateCpuPlayer(PiecesColor color, int recursionLevel);
     }
 }

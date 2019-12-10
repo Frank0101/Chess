@@ -5,19 +5,20 @@ using Chess.Domain.Models.Players;
 
 namespace Chess.Domain.Models.Games
 {
-    public class UserVsCpuGame : Game
+    public class UserVsCpuGame : Game, IUserVsCpuGame
     {
-        public UserPlayer UserPlayer =>
-            Player1 as UserPlayer ?? throw new InvalidCastException();
+        public IUserPlayer UserPlayer =>
+            Player1 as IUserPlayer ?? throw new InvalidCastException();
 
-        public CpuPlayer CpuPlayer =>
-            Player2 as CpuPlayer ?? throw new InvalidCastException();
+        public ICpuPlayer CpuPlayer =>
+            Player2 as ICpuPlayer ?? throw new InvalidCastException();
 
-        public UserVsCpuGame(IBoardFactory boardFactory, PiecesColor userColor, int recursionLevel)
+        public UserVsCpuGame(IBoardFactory boardFactory, IPlayerFactory playerFactory,
+            PiecesColor userColor, int recursionLevel)
             : base(
                 boardFactory,
-                new UserPlayer(userColor),
-                new CpuPlayer(userColor.Invert(), recursionLevel))
+                playerFactory.CreateUserPlayer(userColor),
+                playerFactory.CreateCpuPlayer(userColor.Invert(), recursionLevel))
         {
         }
     }

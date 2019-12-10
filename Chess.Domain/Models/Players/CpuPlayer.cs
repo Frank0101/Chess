@@ -2,7 +2,7 @@ using Chess.Domain.Enums;
 
 namespace Chess.Domain.Models.Players
 {
-    public class CpuPlayer : Player
+    public class CpuPlayer : Player, ICpuPlayer
     {
         public int RecursionLevel { get; }
 

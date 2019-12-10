@@ -1,7 +1,7 @@
 using System;
 using Chess.ConsoleApp.Enums;
 using Chess.ConsoleApp.Services;
-using Chess.Domain.Services;
+using Chess.Domain.Factories;
 
 namespace Chess.ConsoleApp
 {

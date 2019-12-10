@@ -58,7 +58,7 @@ namespace Chess.ConsoleApp.Services
             );
         }
 
-        public void DisplayBoard(Board board, PiecesColor frontColor)
+        public void DisplayBoard(IBoard board, PiecesColor frontColor)
         {
             const ConsoleColor blackPiecesColor = ConsoleColor.Black;
             const ConsoleColor whitePiecesColor = ConsoleColor.White;
@@ -107,7 +107,7 @@ namespace Chess.ConsoleApp.Services
             );
         }
 
-        public MoveSelection TryRequestMoveSelection(Board board, out IMove? move)
+        public MoveSelection TryRequestMoveSelection(IBoard board, out IMove? move)
         {
             _consoleWrapper.WriteLine();
             _consoleWrapper.WriteLine("move: e.g. \"a1b2\"");

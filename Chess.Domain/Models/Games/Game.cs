@@ -5,18 +5,18 @@ using Chess.Domain.Models.Players;
 
 namespace Chess.Domain.Models.Games
 {
-    public abstract class Game
+    public abstract class Game : IGame
     {
-        protected readonly Player Player1;
-        protected readonly Player Player2;
+        protected readonly IPlayer Player1;
+        protected readonly IPlayer Player2;
 
-        public Board Board { get; }
+        public IBoard Board { get; }
 
         public event Action<PiecesColor>? TurnStarted;
 
-        protected Game(IBoardFactory boardFactory, Player player1, Player player2)
+        protected Game(IBoardFactory boardFactory, IPlayer player1, IPlayer player2)
         {
-            if (player1.Color != player2.Color.Invert())
+            if (player1.Color == player2.Color)
                 throw new ArgumentException();
 
             Player1 = player1;

@@ -13,7 +13,7 @@ namespace Chess.Domain.Factories
             _moveFactory = moveFactory;
         }
 
-        public Board Create() =>
+        public IBoard Create() =>
             new Board(_pieceFactory, _moveFactory);
     }
 }

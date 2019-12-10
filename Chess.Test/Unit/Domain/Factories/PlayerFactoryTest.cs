@@ -38,7 +38,7 @@ namespace Chess.Test.Unit.Domain.Factories
             cpuPlayer.Should().NotBeNull();
             cpuPlayer.Should().BeOfType<CpuPlayer>();
             cpuPlayer.Color.Should().Be(PiecesColor.Black);
-            ((CpuPlayer) cpuPlayer).RecursionLevel.Should().Be(recursionLevel);
+            cpuPlayer.RecursionLevel.Should().Be(recursionLevel);
         }
     }
 }
