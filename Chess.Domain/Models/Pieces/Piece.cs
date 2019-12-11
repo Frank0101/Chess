@@ -15,9 +15,7 @@ namespace Chess.Domain.Models.Pieces
             Value = value;
         }
 
-        public override string ToString()
-        {
-            return Symbol.ToString();
-        }
+        public override string ToString() =>
+            Symbol.ToString();
     }
 }
