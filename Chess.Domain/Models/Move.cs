@@ -6,15 +6,15 @@ namespace Chess.Domain.Models
         public int SrcCol { get; }
         public int DstRow { get; }
         public int DstCol { get; }
-        public Move? Next { get; }
+        public int Value { get; set; }
+        public Move? Next { get; set; }
 
-        public Move(int srcRow, int srcCol, int dstRow, int dstCol, Move? next = null)
+        public Move(int srcRow, int srcCol, int dstRow, int dstCol)
         {
             SrcRow = srcRow;
             SrcCol = srcCol;
             DstRow = dstRow;
             DstCol = dstCol;
-            Next = next;
         }
 
         public override string ToString() =>
