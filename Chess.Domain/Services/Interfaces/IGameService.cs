@@ -5,6 +5,6 @@ namespace Chess.Domain.Services.Interfaces
 {
     public interface IGameService
     {
-        ValueTask RunGame(Game game);
+        Task RunGame(Game game);
     }
 }

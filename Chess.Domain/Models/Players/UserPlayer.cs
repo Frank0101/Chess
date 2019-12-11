@@ -5,11 +5,11 @@ namespace Chess.Domain.Models.Players
 {
     public class UserPlayer : IPlayer
     {
-        public Func<Board, PiecesColor, Move?>? OnMoveRequested { get; }
+        public Func<Board, PiecesColor, Move?> OnMoveRequested { get; }
 
-        public UserPlayer(Func<Board, PiecesColor, Move?>? OnMoveRequested)
+        public UserPlayer(Func<Board, PiecesColor, Move?> onMoveRequested)
         {
-            this.OnMoveRequested = OnMoveRequested;
+            OnMoveRequested = onMoveRequested;
         }
     }
 }

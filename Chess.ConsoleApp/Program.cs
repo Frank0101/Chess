@@ -13,7 +13,7 @@ namespace Chess.ConsoleApp
         {
             var whitePlayer = new UserPlayer((board, turnColor) => null);
             var blackPlayer = new CpuPlayer(3);
-            var game = new Game(whitePlayer, blackPlayer);
+            var game = new Game(whitePlayer, blackPlayer, (board, turnColor) => { });
 
             await using var serviceProvider = RegisterDependencies();
             var gameService = serviceProvider.GetService<IGameService>();
