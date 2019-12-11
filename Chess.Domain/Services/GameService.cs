@@ -25,22 +25,29 @@ namespace Chess.Domain.Services
                 {
                     game.OnNewTurn(game.Board, game.TurnColor);
 
-                    var turnPlayer = game.TurnColor == PiecesColor.White
+                    var player = game.TurnColor == PiecesColor.White
                         ? game.WhitePlayer
                         : game.BlackPlayer;
 
-                    var move = turnPlayer switch
+                    if (TryGetMove(player, game.Board, game.TurnColor, out var move))
                     {
-                        UserPlayer userPlayer when _userPlayerService
-                            .TryGetMove(userPlayer, game.Board, game.TurnColor, out var m) => m,
-                        CpuPlayer cpuPlayer when _cpuPlayerService
-                            .TryGetMove(cpuPlayer, game.Board, game.TurnColor, out var m) => m,
-                        _ => throw new NotImplementedException()
-                    };
-
-                    // apply move here
-                    break;
+                        // apply move here
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             });
+
+        private bool TryGetMove(IPlayer player, Board board, PiecesColor turnColor, out Move? move) =>
+            player switch
+            {
+                UserPlayer userPlayer => _userPlayerService
+                    .TryGetMove(userPlayer, board, turnColor, out move),
+                CpuPlayer cpuPlayer => _cpuPlayerService
+                    .TryGetMove(cpuPlayer, board, turnColor, out move),
+                _ => throw new NotImplementedException()
+            };
     }
 }
