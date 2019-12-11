@@ -23,6 +23,8 @@ namespace Chess.ConsoleApp
         private static ServiceProvider RegisterDependencies()
         {
             return new ServiceCollection()
+                .AddScoped<IUserPlayerService, UserPlayerService>()
+                .AddScoped<ICpuPlayerService, CpuPlayerService>()
                 .AddScoped<IGameService, GameService>()
                 .BuildServiceProvider();
         }
