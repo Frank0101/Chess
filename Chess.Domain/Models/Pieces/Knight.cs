@@ -5,7 +5,7 @@ namespace Chess.Domain.Models.Pieces
     public class Knight : Piece
     {
         public Knight(PiecesColor color)
-            : base(color, color == PiecesColor.Black ? 'n' : 'N', 4)
+            : base(color, color == PiecesColor.White ? 'N' : 'n', 4)
         {
         }
     }

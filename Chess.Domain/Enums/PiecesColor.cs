@@ -2,15 +2,15 @@ namespace Chess.Domain.Enums
 {
     public enum PiecesColor
     {
-        Black,
-        White
+        White,
+        Black
     };
 
     public static class PiecesColorExtensions
     {
         public static PiecesColor Invert(this PiecesColor color) =>
-            color == PiecesColor.Black
-                ? PiecesColor.White
-                : PiecesColor.Black;
+            color == PiecesColor.White
+                ? PiecesColor.Black
+                : PiecesColor.White;
     }
 }
