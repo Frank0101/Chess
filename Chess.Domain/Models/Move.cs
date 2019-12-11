@@ -6,8 +6,6 @@ namespace Chess.Domain.Models
         public int SrcCol { get; }
         public int DstRow { get; }
         public int DstCol { get; }
-        public int Value { get; set; }
-        public Move? Next { get; set; }
 
         public Move(int srcRow, int srcCol, int dstRow, int dstCol)
         {
