@@ -76,9 +76,9 @@ namespace Chess.Domain.Models
         {
             var sb = new StringBuilder();
 
-            for (var row = 0; row < 8; row++)
+            for (var row = 7; row >= 0; row--)
             {
-                if (row > 0) sb.AppendLine();
+                if (row < 7) sb.AppendLine();
                 for (var col = 0; col < 8; col++)
                 {
                     sb.Append(_pieces[row, col]?.ToString() ?? " ");
