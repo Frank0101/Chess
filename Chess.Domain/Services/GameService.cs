@@ -29,7 +29,7 @@ namespace Chess.Domain.Services
                         ? game.WhitePlayer
                         : game.BlackPlayer;
 
-                    if (TryGetMove(player, game.Board, game.TurnColor, out var move))
+                    if (GetMove(player, game.Board, game.TurnColor) != null)
                     {
                         // apply move here
                     }
@@ -40,13 +40,11 @@ namespace Chess.Domain.Services
                 }
             });
 
-        private bool TryGetMove(IPlayer player, Board board, PiecesColor turnColor, out Move? move) =>
+        private Move? GetMove(IPlayer player, Board board, PiecesColor turnColor) =>
             player switch
             {
-                UserPlayer userPlayer => _userPlayerService
-                    .TryGetMove(userPlayer, board, turnColor, out move),
-                CpuPlayer cpuPlayer => _cpuPlayerService
-                    .TryGetMove(cpuPlayer, board, turnColor, out move),
+                UserPlayer userPlayer => _userPlayerService.GetMove(userPlayer, board, turnColor),
+                CpuPlayer cpuPlayer => _cpuPlayerService.GetMove(cpuPlayer, board, turnColor),
                 _ => throw new NotImplementedException()
             };
     }

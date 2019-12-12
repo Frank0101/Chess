@@ -6,6 +6,6 @@ namespace Chess.Domain.Services.Interfaces
 {
     public interface IPlayerService<in T> where T : IPlayer
     {
-        bool TryGetMove(T player, Board board, PiecesColor turnColor, out Move? move);
+        Move? GetMove(T player, Board board, PiecesColor turnColor);
     }
 }

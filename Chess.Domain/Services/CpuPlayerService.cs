@@ -1,4 +1,3 @@
-using System;
 using Chess.Domain.Enums;
 using Chess.Domain.Models;
 using Chess.Domain.Models.Players;
@@ -8,9 +7,10 @@ namespace Chess.Domain.Services
 {
     public class CpuPlayerService : ICpuPlayerService
     {
-        public bool TryGetMove(CpuPlayer player, Board board, PiecesColor turnColor, out Move? move)
+        public Move? GetMove(CpuPlayer player, Board board, PiecesColor turnColor)
         {
-            throw new NotImplementedException();
+            // todo
+            return null;
         }
     }
 }
