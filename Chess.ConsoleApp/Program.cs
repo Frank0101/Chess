@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Chess.ConsoleApp.Services;
+using Chess.ConsoleApp.Services.Interfaces;
 using Chess.Domain.Models;
 using Chess.Domain.Models.Players;
 using Chess.Domain.Services;
@@ -28,6 +30,11 @@ namespace Chess.ConsoleApp
         private static ServiceProvider RegisterDependencies()
         {
             return new ServiceCollection()
+
+                // console
+                .AddScoped<IConsoleWrapper, ConsoleWrapper>()
+
+                // domain
                 .AddScoped<IUserPlayerService, UserPlayerService>()
                 .AddScoped<ICpuPlayerService, CpuPlayerService>()
                 .AddScoped<IGameService, GameService>()
