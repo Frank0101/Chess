@@ -78,12 +78,17 @@ namespace Chess.Domain.Models
 
             for (var row = 7; row >= 0; row--)
             {
-                if (row < 7) sb.AppendLine();
+                sb.Append($"{row + 1} ");
+
                 for (var col = 0; col < 8; col++)
                 {
-                    sb.Append(_pieces[row, col]?.ToString() ?? " ");
+                    sb.Append($" {_pieces[row, col]?.ToString() ?? " "} ");
                 }
+
+                sb.AppendLine();
             }
+
+            sb.Append("   a  b  c  d  e  f  g  h");
 
             return sb.ToString();
         }
