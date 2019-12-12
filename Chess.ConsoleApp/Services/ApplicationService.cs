@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using Chess.ConsoleApp.Enums;
 using Chess.ConsoleApp.Services.Interfaces;
+using Chess.Domain.Enums;
 using Chess.Domain.Models;
 using Chess.Domain.Models.Players;
 using Chess.Domain.Services.Interfaces;
@@ -20,13 +22,29 @@ namespace Chess.ConsoleApp.Services
 
         public async Task Start()
         {
-            var whitePlayer = new UserPlayer((board, turnColor) => null);
-            var blackPlayer = new CpuPlayer(3);
-            var game = new Game(whitePlayer, blackPlayer, (board, turnColor) =>
+            _consoleService.DisplayTitle();
+
+            await (_consoleService.GetMainMenuSelection() switch
             {
-                Console.WriteLine(board);
-                Console.WriteLine(turnColor);
+                MainMenuSelection.NewGame => HandleNewGame(),
+                MainMenuSelection.LoadGame => throw new NotImplementedException(),
+                _ => throw new NotImplementedException()
             });
+        }
+
+        private async Task HandleNewGame()
+        {
+            var (userColor, recursionLevel) = _consoleService.GetNewGameConfig();
+
+            IPlayer userPlayer = new UserPlayer((board, turnColor) => null);
+            IPlayer cpuPlayer = new CpuPlayer(recursionLevel);
+
+            var (whitePlayer, blackPlayer) = userColor == PiecesColor.White
+                ? (userPlayer, cpuPlayer)
+                : (cpuPlayer, userPlayer);
+
+            var game = new Game(whitePlayer, blackPlayer,
+                (board, _) => { _consoleService.DisplayBoard(board, userColor); });
 
             await _gameService.RunGame(game);
         }

@@ -13,7 +13,6 @@ namespace Chess.ConsoleApp
         {
             await using var serviceProvider = RegisterDependencies();
             var applicationService = serviceProvider.GetService<IApplicationService>();
-
             await applicationService.Start();
         }
 
