@@ -14,5 +14,6 @@ namespace Chess.ConsoleApp.Services.Interfaces
         void DisplayBoard(Board board, PiecesColor frontColor);
         void DisplayCommandsMenu();
         ICommand GetCommand();
+        void DisplayMoveValidationResult(Move? move, MoveValidationResult validationResult);
     }
 }

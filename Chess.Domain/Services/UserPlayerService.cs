@@ -7,7 +7,11 @@ namespace Chess.Domain.Services
 {
     public class UserPlayerService : IUserPlayerService
     {
-        public Move? GetMove(UserPlayer player, Board board, PiecesColor turnColor) =>
-            player.OnMoveRequested(board, turnColor);
+        public Move? GetMove(UserPlayer player, Board board, PiecesColor turnColor)
+        {
+            var move = player.OnMoveRequested(board, turnColor);
+            player.OnMoveValidated(move, MoveValidationResult.Valid);
+            return move;
+        }
     }
 }

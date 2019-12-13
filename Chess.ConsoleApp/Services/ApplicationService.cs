@@ -37,19 +37,19 @@ namespace Chess.ConsoleApp.Services
         {
             var (userColor, recursionLevel) = _consoleService.GetNewGameConfig();
 
-            IPlayer userPlayer = new UserPlayer(OnMoveRequested);
+            IPlayer userPlayer = new UserPlayer(RequestMove, _consoleService.DisplayMoveValidationResult);
             IPlayer cpuPlayer = new CpuPlayer(recursionLevel);
 
             var (whitePlayer, blackPlayer) = userColor == PiecesColor.White
                 ? (userPlayer, cpuPlayer)
                 : (cpuPlayer, userPlayer);
 
-            var game = new Game(whitePlayer, blackPlayer, OnNewTurn);
+            var game = new Game(whitePlayer, blackPlayer, _consoleService.DisplayBoard);
 
             await _gameService.RunGame(game);
         }
 
-        private Move? OnMoveRequested(Board board, PiecesColor turnColor)
+        private Move? RequestMove(Board board, PiecesColor turnColor)
         {
             _consoleService.DisplayCommandsMenu();
 
@@ -70,8 +70,5 @@ namespace Chess.ConsoleApp.Services
 
             return new Move(srcRow, srcCol, dstRow, dstCol);
         }
-
-        private void OnNewTurn(Board board, PiecesColor turnColor) =>
-            _consoleService.DisplayBoard(board, turnColor);
     }
 }
