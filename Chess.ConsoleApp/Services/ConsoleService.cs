@@ -98,7 +98,7 @@ namespace Chess.ConsoleApp.Services
         {
             _consoleWrapper.WriteLine("move: e.g. \"a1b2\"");
             _consoleWrapper.WriteLine("save game: \"save\"");
-            _consoleWrapper.WriteLine("exit game: \"exit\"");
+            _consoleWrapper.WriteLine("quit game: \"quit\"");
         }
 
         public ICommand GetCommand()
@@ -112,7 +112,7 @@ namespace Chess.ConsoleApp.Services
             {
                 var input when IsMoveCommand(input) => new MoveCommand(input),
                 "save" => new SaveCommand(),
-                "exit" => new ExitCommand(),
+                "quit" => new QuitCommand(),
                 _ => GetCommand()
             };
         }

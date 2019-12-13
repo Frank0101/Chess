@@ -57,7 +57,7 @@ namespace Chess.ConsoleApp.Services
             {
                 MoveCommand moveCommand => ResolveMoveCommand(moveCommand),
                 SaveCommand _ => null,
-                ExitCommand _ => null,
+                QuitCommand _ => null,
                 _ => throw new NotImplementedException()
             };
         }
