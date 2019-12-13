@@ -16,6 +16,7 @@ namespace Chess.Domain.Models
         }
 
         public override string ToString() =>
-            $"${'a' + SrcCol}${SrcRow + 1}${'a' + DstCol}${DstRow + 1}";
+            $"{(char) ('a' + SrcCol)}{SrcRow + 1}"
+            + $"{(char) ('a' + DstCol)}{DstRow + 1}";
     }
 }

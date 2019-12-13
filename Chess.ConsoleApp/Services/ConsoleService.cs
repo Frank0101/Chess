@@ -1,6 +1,8 @@
 using System;
+using System.Text.RegularExpressions;
 using Chess.ConsoleApp.Enums;
 using Chess.ConsoleApp.Models;
+using Chess.ConsoleApp.Models.Commands;
 using Chess.ConsoleApp.Services.Interfaces;
 using Chess.Domain.Enums;
 using Chess.Domain.Models;
@@ -29,34 +31,34 @@ namespace Chess.ConsoleApp.Services
 
         public NewGameConfig GetNewGameConfig()
         {
-            PiecesColor RequestUserColor() =>
-                RequestKey("[b]lack pieces, [w]hite pieces") switch
+            PiecesColor GetUserColor() =>
+                RequestKey("[w]hite pieces, [b]lack pieces") switch
                 {
-                    'b' => PiecesColor.Black,
                     'w' => PiecesColor.White,
-                    _ => RequestUserColor()
+                    'b' => PiecesColor.Black,
+                    _ => GetUserColor()
                 };
 
-            int RequestRecursionLevel() =>
+            int GetRecursionLevel() =>
                 RequestKey("recursion level (3 suggested)") switch
                 {
                     var key when int.TryParse(key.ToString(), out var level) && level > 0 => level,
-                    _ => RequestRecursionLevel()
+                    _ => GetRecursionLevel()
                 };
 
             return new NewGameConfig(
-                RequestUserColor(),
-                RequestRecursionLevel()
+                GetUserColor(),
+                GetRecursionLevel()
             );
         }
 
         public void DisplayBoard(Board board, PiecesColor frontColor)
         {
-            const ConsoleColor whitePiecesColor = ConsoleColor.White;
-            const ConsoleColor blackPiecesColor = ConsoleColor.Black;
-
-            const ConsoleColor whiteTilesColor = ConsoleColor.Gray;
-            const ConsoleColor blackTilesColor = ConsoleColor.DarkGray;
+            const ConsoleColor
+                whitePiecesColor = ConsoleColor.White,
+                blackPiecesColor = ConsoleColor.Black,
+                whiteTilesColor = ConsoleColor.Gray,
+                blackTilesColor = ConsoleColor.DarkGray;
 
             var (startRow, endRow, rowInc, startCol, endCol, colInc) = frontColor == PiecesColor.White
                 ? (7, -1, -1, 0, 8, 1)
@@ -90,6 +92,29 @@ namespace Chess.ConsoleApp.Services
                 ? "   a  b  c  d  e  f  g  h"
                 : "   h  g  f  e  d  c  b  a"
             );
+        }
+
+        public void DisplayCommandsMenu()
+        {
+            _consoleWrapper.WriteLine("move: e.g. \"a1b2\"");
+            _consoleWrapper.WriteLine("save game: \"save\"");
+            _consoleWrapper.WriteLine("exit game: \"exit\"");
+        }
+
+        public ICommand GetCommand()
+        {
+            bool IsMoveCommand(string moveStr) =>
+                Regex.IsMatch(moveStr, "[a-h][1-8][a-h][1-8]");
+
+            _consoleWrapper.Write("command> ");
+
+            return _consoleWrapper.ReadLine() switch
+            {
+                var input when IsMoveCommand(input) => new MoveCommand(input),
+                "save" => new SaveCommand(),
+                "exit" => new ExitCommand(),
+                _ => GetCommand()
+            };
         }
 
         private char RequestKey(string prompt)

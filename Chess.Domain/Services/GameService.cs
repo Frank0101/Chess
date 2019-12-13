@@ -29,7 +29,8 @@ namespace Chess.Domain.Services
                         ? game.WhitePlayer
                         : game.BlackPlayer;
 
-                    if (GetMove(player, game.Board, game.TurnColor) != null)
+                    var move = GetMove(player, game.Board, game.TurnColor);
+                    if (move != null)
                     {
                         // apply move here
                     }
