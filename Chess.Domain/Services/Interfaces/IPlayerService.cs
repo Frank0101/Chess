@@ -1,5 +1,6 @@
 using Chess.Domain.Enums;
 using Chess.Domain.Models;
+using Chess.Domain.Models.Moves;
 using Chess.Domain.Models.Players;
 
 namespace Chess.Domain.Services.Interfaces

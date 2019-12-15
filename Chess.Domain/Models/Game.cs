@@ -1,5 +1,6 @@
 using System;
 using Chess.Domain.Enums;
+using Chess.Domain.Models.Moves;
 using Chess.Domain.Models.Players;
 
 namespace Chess.Domain.Models

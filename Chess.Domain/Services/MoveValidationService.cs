@@ -1,6 +1,7 @@
 using System;
 using Chess.Domain.Enums;
 using Chess.Domain.Models;
+using Chess.Domain.Models.Moves;
 using Chess.Domain.Models.Pieces;
 using Chess.Domain.Services.Interfaces;
 

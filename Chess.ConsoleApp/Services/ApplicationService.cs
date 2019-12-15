@@ -5,6 +5,7 @@ using Chess.ConsoleApp.Models.Commands;
 using Chess.ConsoleApp.Services.Interfaces;
 using Chess.Domain.Enums;
 using Chess.Domain.Models;
+using Chess.Domain.Models.Moves;
 using Chess.Domain.Models.Players;
 using Chess.Domain.Services.Interfaces;
 

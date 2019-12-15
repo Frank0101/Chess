@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Chess.Domain.Enums;
 using Chess.Domain.Models;
+using Chess.Domain.Models.Moves;
 using Chess.Domain.Models.Players;
 using Chess.Domain.Services.Interfaces;
 
@@ -35,13 +36,14 @@ namespace Chess.Domain.Services
                         if (game.OnMoveConfirm(game.Board, game.TurnColor, move))
                         {
                             ApplyMove(game.Board, move);
-                            game.TurnColor = game.TurnColor.Invert();
                         }
                     }
                     else
                     {
                         break;
                     }
+
+                    game.TurnColor = game.TurnColor.Invert();
                 }
             });
 
