@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Chess.Domain.Enums;
 using Chess.Domain.Models;
 using Chess.Domain.Models.Moves;
@@ -10,25 +12,59 @@ namespace Chess.Domain.Services
 {
     public class CpuPlayerService : ICpuPlayerService
     {
-        private readonly IMoveValidationService _moveValidationService;
+        private const int MaxDegreeOfParallelism = 8;
+        private readonly ParallelOptions _parallelOptions;
+        private readonly Random _random = new Random();
 
-        public CpuPlayerService(IMoveValidationService moveValidationService)
+        private readonly IMoveValidationService _moveValidationService;
+        private readonly IMoveExecutionService _moveExecutionService;
+
+        public CpuPlayerService(
+            IMoveValidationService moveValidationService,
+            IMoveExecutionService moveExecutionService)
         {
             _moveValidationService = moveValidationService;
+            _moveExecutionService = moveExecutionService;
+
+            _parallelOptions = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = MaxDegreeOfParallelism
+            };
         }
 
         public Move? GetMove(CpuPlayer player, Board board, PiecesColor turnColor)
         {
             // todo
-            return GetBestMove(board, turnColor);
+            return GetBestMove(board, turnColor, player.RecursionLevel);
         }
 
-        private CpuMove? GetBestMove(Board board, PiecesColor turnColor)
+        private CpuMove? GetBestMove(Board board, PiecesColor turnColor, int level)
         {
-            var validMoves = GetValidMoves(board, turnColor);
+            const int chessMateValue = 99;
 
-            // todo
-            return validMoves.First();
+            var moves = GetValidMoves(board, turnColor);
+            Parallel.ForEach(moves, _parallelOptions, (move) =>
+            {
+                var tempBoard = new Board(board);
+                _moveExecutionService.Execute(tempBoard, move);
+
+                if (level > 0)
+                {
+                    move.Response = GetBestMove(tempBoard, turnColor.Invert(), level - 1);
+                    if (move.Response != null)
+                    {
+                        move.Value -= move.Response.Value;
+                    }
+                    else
+                    {
+                        move.Value += chessMateValue;
+                    }
+                }
+            });
+
+            var bestValue = moves.Max(move => move.Value);
+            var bestMoves = moves.Where(move => move.Value == bestValue).ToArray();
+            return bestMoves[_random.Next(bestMoves.Length)];
         }
 
         private List<CpuMove> GetValidMoves(Board board, PiecesColor turnColor)
@@ -43,8 +79,10 @@ namespace Chess.Domain.Services
                     {
                         for (var dstCol = 0; dstCol < 8; dstCol++)
                         {
-                            var move = new CpuMove(srcRow, srcCol, dstRow, dstCol,
-                                board[dstRow, dstCol]?.Value ?? 0);
+                            var move = new CpuMove(srcRow, srcCol, dstRow, dstCol)
+                            {
+                                Value = board[dstRow, dstCol]?.Value ?? 0
+                            };
 
                             if (_moveValidationService.Validate(board, turnColor, move)
                                 == MoveValidationResult.Valid)
