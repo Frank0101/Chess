@@ -26,6 +26,7 @@ namespace Chess.ConsoleApp
                 .AddScoped<IApplicationService, ApplicationService>()
 
                 // domain
+                .AddScoped<IMoveValidationService, MoveValidationService>()
                 .AddScoped<IUserPlayerService, UserPlayerService>()
                 .AddScoped<ICpuPlayerService, CpuPlayerService>()
                 .AddScoped<IGameService, GameService>()

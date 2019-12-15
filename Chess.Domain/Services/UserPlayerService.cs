@@ -7,11 +7,29 @@ namespace Chess.Domain.Services
 {
     public class UserPlayerService : IUserPlayerService
     {
+        private readonly IMoveValidationService _moveValidationService;
+
+        public UserPlayerService(IMoveValidationService moveValidationService)
+        {
+            _moveValidationService = moveValidationService;
+        }
+
         public Move? GetMove(UserPlayer player, Board board, PiecesColor turnColor)
         {
             var move = player.OnMoveRequested(board, turnColor);
-            player.OnMoveValidated(move, MoveValidationResult.Valid);
-            return move;
+            if (move != null)
+            {
+                var validationResult = _moveValidationService.Validate(move);
+                player.OnMoveValidated(move, validationResult);
+
+                return validationResult switch
+                {
+                    MoveValidationResult.Valid => move,
+                    _ => GetMove(player, board, turnColor)
+                };
+            }
+
+            return null;
         }
     }
 }
