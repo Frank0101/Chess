@@ -4,12 +4,12 @@ namespace Chess.Domain.Models.Players
 {
     public class CpuPlayer : IPlayer
     {
-        public int RecursionLevel { get; }
-        public Action OnBranchComputed { get; }
+        public int RecursionDepth { get; }
+        public Action<int> OnBranchComputed { get; }
 
-        public CpuPlayer(int recursionLevel, Action onBranchComputed)
+        public CpuPlayer(int recursionDepth, Action<int> onBranchComputed)
         {
-            RecursionLevel = recursionLevel;
+            RecursionDepth = recursionDepth;
             OnBranchComputed = onBranchComputed;
         }
     }

@@ -36,7 +36,7 @@ namespace Chess.ConsoleApp.Services
 
         private async Task HandleNewGame()
         {
-            var (userColor, recursionLevel) = _consoleService.GetNewGameConfig();
+            var (userColor, recursionDepth) = _consoleService.GetNewGameConfig();
 
             IPlayer userPlayer = new UserPlayer(
                 (board, turnColor) =>
@@ -50,8 +50,9 @@ namespace Chess.ConsoleApp.Services
                 (move, validationResult) =>
                     _consoleService.DisplayMoveValidationResult(validationResult));
 
-            IPlayer cpuPlayer = new CpuPlayer(recursionLevel,
-                () => _consoleService.DisplayBranchComputed());
+            IPlayer cpuPlayer = new CpuPlayer(recursionDepth,
+                recursionLevel =>
+                    _consoleService.DisplayBranchComputed(recursionLevel));
 
             var (whitePlayer, blackPlayer) = userColor == PiecesColor.White
                 ? (userPlayer, cpuPlayer)

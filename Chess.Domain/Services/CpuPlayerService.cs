@@ -14,6 +14,7 @@ namespace Chess.Domain.Services
     {
         private const int ChessMateValue = 99;
         private const int MaxDegreeOfParallelism = 4;
+        private const int MaxNotifiableLevel = 1;
 
         private readonly ParallelOptions _parallelOptions;
         private readonly Random _random = new Random();
@@ -35,9 +36,10 @@ namespace Chess.Domain.Services
         }
 
         public Move? GetMove(CpuPlayer player, Board board, PiecesColor turnColor) =>
-            GetBestMove(player, board, turnColor, player.RecursionLevel, player.RecursionLevel);
+            GetBestMove(player, board, turnColor, 0, player.RecursionDepth);
 
-        private CpuMove? GetBestMove(CpuPlayer player, Board board, PiecesColor turnColor, int level, int maxLevel)
+        private CpuMove? GetBestMove(CpuPlayer player, Board board, PiecesColor turnColor,
+            int recursionLevel, int recursionDepth)
         {
             var moves = GetValidMoves(board, turnColor);
             Parallel.ForEach(moves, _parallelOptions, (move) =>
@@ -45,9 +47,11 @@ namespace Chess.Domain.Services
                 var tempBoard = new Board(board);
                 _moveExecutionService.Execute(tempBoard, move);
 
-                if (level > 0)
+                if (recursionLevel < recursionDepth)
                 {
-                    move.Response = GetBestMove(player, tempBoard, turnColor.Invert(), level - 1, maxLevel);
+                    move.Response = GetBestMove(player, tempBoard, turnColor.Invert(),
+                        recursionLevel + 1, recursionDepth);
+
                     if (move.Response != null)
                     {
                         move.Value -= move.Response.Value;
@@ -57,16 +61,17 @@ namespace Chess.Domain.Services
                         move.Value += ChessMateValue;
                     }
                 }
-
-                if (level == maxLevel)
-                {
-                    player.OnBranchComputed();
-                }
             });
 
             var bestValue = moves.Max(move => move.Value);
             var bestMoves = moves.Where(move => move.Value == bestValue).ToArray();
             var bestMove = bestMoves[_random.Next(bestMoves.Length)];
+
+            if (recursionLevel <= MaxNotifiableLevel)
+            {
+                player.OnBranchComputed(recursionLevel);
+            }
+
             return bestMove;
         }
 

@@ -5,18 +5,18 @@ namespace Chess.ConsoleApp.Models
     public class NewGameConfig
     {
         public PiecesColor UserColor { get; }
-        public int RecursionLevel { get; }
+        public int RecursionDepth { get; }
 
-        public NewGameConfig(PiecesColor userColor, int recursionLevel)
+        public NewGameConfig(PiecesColor userColor, int recursionDepth)
         {
             UserColor = userColor;
-            RecursionLevel = recursionLevel;
+            RecursionDepth = recursionDepth;
         }
 
-        public void Deconstruct(out PiecesColor userColor, out int recursionLevel)
+        public void Deconstruct(out PiecesColor userColor, out int recursionDepth)
         {
             userColor = UserColor;
-            recursionLevel = RecursionLevel;
+            recursionDepth = RecursionDepth;
         }
     }
 }

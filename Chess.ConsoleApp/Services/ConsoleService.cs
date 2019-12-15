@@ -40,16 +40,16 @@ namespace Chess.ConsoleApp.Services
                     _ => GetUserColor()
                 };
 
-            int GetRecursionLevel() =>
-                RequestKey("recursion level (3 suggested)") switch
+            int GetRecursionDepth() =>
+                RequestKey("recursion depth (3 suggested)") switch
                 {
                     var key when int.TryParse(key.ToString(), out var level) && level > 0 => level,
-                    _ => GetRecursionLevel()
+                    _ => GetRecursionDepth()
                 };
 
             return new NewGameConfig(
                 GetUserColor(),
-                GetRecursionLevel()
+                GetRecursionDepth()
             );
         }
 
@@ -154,14 +154,21 @@ namespace Chess.ConsoleApp.Services
                 _ => GetMoveConfirmation()
             };
 
-        public void DisplayBranchComputed() =>
-            _consoleWrapper.Write(".");
-
-        public void WaitMoveAcknowledge()
+        public void DisplayBranchComputed(int recursionLevel)
         {
-            _consoleWrapper.WriteLine();
-            RequestKey("press any key");
+            switch (recursionLevel)
+            {
+                case 0:
+                    _consoleWrapper.WriteLine();
+                    break;
+                case 1:
+                    _consoleWrapper.Write(".");
+                    break;
+            }
         }
+
+        public void WaitMoveAcknowledge() =>
+            RequestKey("press any key");
 
         private char RequestKey(string prompt)
         {
