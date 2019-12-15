@@ -11,9 +11,10 @@ namespace Chess.ConsoleApp.Services.Interfaces
         void DisplayTitle();
         MainMenuSelection GetMainMenuSelection();
         NewGameConfig GetNewGameConfig();
-        void DisplayBoard(Board board, PiecesColor frontColor);
+        void DisplayBoard(Board board, PiecesColor frontColor, Move? move = null);
         void DisplayCommandsMenu();
         ICommand GetCommand();
         void DisplayMoveValidationResult(MoveValidationResult validationResult);
+        bool GetMoveConfirmation();
     }
 }

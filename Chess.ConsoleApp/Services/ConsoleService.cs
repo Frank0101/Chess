@@ -52,13 +52,15 @@ namespace Chess.ConsoleApp.Services
             );
         }
 
-        public void DisplayBoard(Board board, PiecesColor frontColor)
+        public void DisplayBoard(Board board, PiecesColor frontColor, Move? move = null)
         {
             const ConsoleColor
                 whitePiecesColor = ConsoleColor.White,
                 blackPiecesColor = ConsoleColor.Black,
                 whiteTilesColor = ConsoleColor.Gray,
-                blackTilesColor = ConsoleColor.DarkGray;
+                blackTilesColor = ConsoleColor.DarkGray,
+                srcMoveColor = ConsoleColor.Red,
+                dstMoveColor = ConsoleColor.DarkRed;
 
             var (startRow, endRow, rowInc, startCol, endCol, colInc) = frontColor == PiecesColor.White
                 ? (7, -1, -1, 0, 8, 1)
@@ -70,18 +72,31 @@ namespace Chess.ConsoleApp.Services
 
                 for (var col = startCol; col != endCol; col += colInc)
                 {
-                    if (board[row, col] is {} piece)
-                    {
-                        _consoleWrapper.SetForegroundColor(piece.Color == PiecesColor.White
-                            ? whitePiecesColor
-                            : blackPiecesColor);
-                    }
-
                     _consoleWrapper.SetBackgroundColor((row + col) % 2 == 0
                         ? whiteTilesColor
                         : blackTilesColor);
 
-                    _consoleWrapper.Write($" {board[row, col]?.ToString() ?? " "} ");
+                    if (move != null && row == move.SrcRow && col == move.SrcCol)
+                    {
+                        _consoleWrapper.SetForegroundColor(srcMoveColor);
+                        _consoleWrapper.Write($" {board[row, col]?.ToString() ?? " "} ");
+                    }
+                    else if (move != null && row == move.DstRow && col == move.DstCol)
+                    {
+                        _consoleWrapper.SetForegroundColor(dstMoveColor);
+                        _consoleWrapper.Write($" * ");
+                    }
+                    else
+                    {
+                        if (board[row, col] is {} piece)
+                        {
+                            _consoleWrapper.SetForegroundColor(piece.Color == PiecesColor.White
+                                ? whitePiecesColor
+                                : blackPiecesColor);
+                        }
+
+                        _consoleWrapper.Write($" {board[row, col]?.ToString() ?? " "} ");
+                    }
                 }
 
                 _consoleWrapper.ResetColor();
@@ -121,6 +136,14 @@ namespace Chess.ConsoleApp.Services
         {
             _consoleWrapper.WriteLine(validationResult.ToString());
         }
+
+        public bool GetMoveConfirmation() =>
+            RequestKey("confirm move? [y/n]") switch
+            {
+                'y' => true,
+                'n' => false,
+                _ => GetMoveConfirmation()
+            };
 
         private char RequestKey(string prompt)
         {

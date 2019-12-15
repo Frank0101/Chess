@@ -16,7 +16,7 @@ namespace Chess.Domain.Services
 
         public Move? GetMove(UserPlayer player, Board board, PiecesColor turnColor)
         {
-            var move = player.OnMoveRequested(board, turnColor);
+            var move = player.OnMoveRequest(board, turnColor);
             if (move != null)
             {
                 var validationResult = _moveValidationService.Validate(board, turnColor, move);

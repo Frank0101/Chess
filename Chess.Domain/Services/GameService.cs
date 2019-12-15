@@ -32,7 +32,10 @@ namespace Chess.Domain.Services
                     var move = GetMove(player, game.Board, game.TurnColor);
                     if (move != null)
                     {
-                        // apply move here
+                        if (game.OnMoveConfirm(game.Board, game.TurnColor, move))
+                        {
+                            // apply move here
+                        }
                     }
                     else
                     {
