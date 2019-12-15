@@ -12,7 +12,9 @@ namespace Chess.Domain.Services
 {
     public class CpuPlayerService : ICpuPlayerService
     {
+        private const int ChessMateValue = 99;
         private const int MaxDegreeOfParallelism = 8;
+
         private readonly ParallelOptions _parallelOptions;
         private readonly Random _random = new Random();
 
@@ -32,16 +34,11 @@ namespace Chess.Domain.Services
             };
         }
 
-        public Move? GetMove(CpuPlayer player, Board board, PiecesColor turnColor)
-        {
-            // todo
-            return GetBestMove(board, turnColor, player.RecursionLevel);
-        }
+        public Move? GetMove(CpuPlayer player, Board board, PiecesColor turnColor) =>
+            GetBestMove(board, turnColor, player.RecursionLevel);
 
         private CpuMove? GetBestMove(Board board, PiecesColor turnColor, int level)
         {
-            const int chessMateValue = 99;
-
             var moves = GetValidMoves(board, turnColor);
             Parallel.ForEach(moves, _parallelOptions, (move) =>
             {
@@ -57,7 +54,7 @@ namespace Chess.Domain.Services
                     }
                     else
                     {
-                        move.Value += chessMateValue;
+                        move.Value += ChessMateValue;
                     }
                 }
             });
