@@ -19,7 +19,7 @@ namespace Chess.Domain.Services
             var move = player.OnMoveRequested(board, turnColor);
             if (move != null)
             {
-                var validationResult = _moveValidationService.Validate(move);
+                var validationResult = _moveValidationService.Validate(board, turnColor, move);
                 player.OnMoveValidated(move, validationResult);
 
                 return validationResult switch

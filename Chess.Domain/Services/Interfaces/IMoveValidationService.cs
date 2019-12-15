@@ -5,6 +5,6 @@ namespace Chess.Domain.Services.Interfaces
 {
     public interface IMoveValidationService
     {
-        MoveValidationResult Validate(Move move);
+        MoveValidationResult Validate(Board board, PiecesColor turnColor, Move move);
     }
 }

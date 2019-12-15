@@ -103,7 +103,7 @@ namespace Chess.ConsoleApp.Services
 
         public ICommand GetCommand()
         {
-            bool IsMoveCommand(string moveStr) =>
+            static bool IsMoveCommand(string moveStr) =>
                 Regex.IsMatch(moveStr, "[a-h][1-8][a-h][1-8]");
 
             _consoleWrapper.Write("command> ");

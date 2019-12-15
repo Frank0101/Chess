@@ -37,11 +37,18 @@ namespace Chess.ConsoleApp.Services
         {
             var (userColor, recursionLevel) = _consoleService.GetNewGameConfig();
 
-            IPlayer userPlayer = new UserPlayer(RequestMove,
+            IPlayer userPlayer = new UserPlayer(
+                (board, turnColor) =>
+                    _consoleService.GetCommand() switch
+                    {
+                        MoveCommand moveCommand => ResolveMoveCommand(moveCommand),
+                        SaveCommand _ => null,
+                        QuitCommand _ => null,
+                        _ => throw new NotImplementedException()
+                    },
                 (move, validationResult) =>
-                {
-                    _consoleService.DisplayMoveValidationResult(validationResult);
-                });
+                    _consoleService.DisplayMoveValidationResult(validationResult));
+
             IPlayer cpuPlayer = new CpuPlayer(recursionLevel);
 
             var (whitePlayer, blackPlayer) = userColor == PiecesColor.White
@@ -52,22 +59,13 @@ namespace Chess.ConsoleApp.Services
                 (board, turnColor) =>
                 {
                     _consoleService.DisplayBoard(board, userColor);
+                    if (turnColor == userColor)
+                    {
+                        _consoleService.DisplayCommandsMenu();
+                    }
                 });
 
             await _gameService.RunGame(game);
-        }
-
-        private Move? RequestMove(Board board, PiecesColor turnColor)
-        {
-            _consoleService.DisplayCommandsMenu();
-
-            return _consoleService.GetCommand() switch
-            {
-                MoveCommand moveCommand => ResolveMoveCommand(moveCommand),
-                SaveCommand _ => null,
-                QuitCommand _ => null,
-                _ => throw new NotImplementedException()
-            };
         }
 
         private static Move ResolveMoveCommand(MoveCommand moveCommand)
