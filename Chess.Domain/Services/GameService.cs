@@ -12,11 +12,16 @@ namespace Chess.Domain.Services
     {
         private readonly IUserPlayerService _userPlayerService;
         private readonly ICpuPlayerService _cpuPlayerService;
+        private readonly IMoveExecutionService _moveExecutionService;
 
-        public GameService(IUserPlayerService userPlayerService, ICpuPlayerService cpuPlayerService)
+        public GameService(
+            IUserPlayerService userPlayerService,
+            ICpuPlayerService cpuPlayerService,
+            IMoveExecutionService moveExecutionService)
         {
             _userPlayerService = userPlayerService;
             _cpuPlayerService = cpuPlayerService;
+            _moveExecutionService = moveExecutionService;
         }
 
         public async Task RunGame(Game game) =>
@@ -35,7 +40,7 @@ namespace Chess.Domain.Services
                     {
                         if (game.OnMoveConfirm(game.Board, game.TurnColor, move))
                         {
-                            ApplyMove(game.Board, move);
+                            _moveExecutionService.Execute(game.Board, move);
                         }
                     }
                     else
@@ -54,11 +59,5 @@ namespace Chess.Domain.Services
                 CpuPlayer cpuPlayer => _cpuPlayerService.GetMove(cpuPlayer, board, turnColor),
                 _ => throw new NotImplementedException()
             };
-
-        private static void ApplyMove(Board board, Move move)
-        {
-            board[move.DstRow, move.DstCol] = board[move.SrcRow, move.SrcCol];
-            board[move.SrcRow, move.SrcCol] = null;
-        }
     }
 }

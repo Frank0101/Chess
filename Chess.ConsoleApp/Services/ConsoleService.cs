@@ -154,6 +154,9 @@ namespace Chess.ConsoleApp.Services
                 _ => GetMoveConfirmation()
             };
 
+        public void WaitMoveAcknowledge() =>
+            RequestKey("press any key");
+
         private char RequestKey(string prompt)
         {
             _consoleWrapper.Write($"{prompt}: ");

@@ -68,8 +68,13 @@ namespace Chess.ConsoleApp.Services
                 (board, turnColor, move) =>
                 {
                     _consoleService.DisplayBoard(board, userColor, move);
-                    return turnColor != userColor
-                           || _consoleService.GetMoveConfirmation();
+                    if (turnColor == userColor)
+                    {
+                        return _consoleService.GetMoveConfirmation();
+                    }
+
+                    _consoleService.WaitMoveAcknowledge();
+                    return true;
                 });
 
             await _gameService.RunGame(game);

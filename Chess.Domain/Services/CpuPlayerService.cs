@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Chess.Domain.Enums;
 using Chess.Domain.Models;
 using Chess.Domain.Models.Moves;
@@ -19,7 +20,7 @@ namespace Chess.Domain.Services
         public Move? GetMove(CpuPlayer player, Board board, PiecesColor turnColor)
         {
             // todo
-            return null;
+            return GetBestMove(board, turnColor);
         }
 
         private CpuMove? GetBestMove(Board board, PiecesColor turnColor)
@@ -27,7 +28,7 @@ namespace Chess.Domain.Services
             var validMoves = GetValidMoves(board, turnColor);
 
             // todo
-            return null;
+            return validMoves.First();
         }
 
         private List<CpuMove> GetValidMoves(Board board, PiecesColor turnColor)
