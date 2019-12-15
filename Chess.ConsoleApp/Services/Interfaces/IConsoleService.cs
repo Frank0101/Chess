@@ -17,6 +17,7 @@ namespace Chess.ConsoleApp.Services.Interfaces
         ICommand GetCommand();
         void DisplayMoveValidationResult(MoveValidationResult validationResult);
         bool GetMoveConfirmation();
+        void DisplayBranchComputed();
         void WaitMoveAcknowledge();
     }
 }
