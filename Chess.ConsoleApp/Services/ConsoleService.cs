@@ -117,7 +117,7 @@ namespace Chess.ConsoleApp.Services
             };
         }
 
-        public void DisplayMoveValidationResult(Move? move, MoveValidationResult validationResult)
+        public void DisplayMoveValidationResult(MoveValidationResult validationResult)
         {
             _consoleWrapper.WriteLine(validationResult.ToString());
         }
