@@ -134,7 +134,15 @@ namespace Chess.ConsoleApp.Services
 
         public void DisplayMoveValidationResult(MoveValidationResult validationResult)
         {
-            _consoleWrapper.WriteLine(validationResult.ToString());
+            _consoleWrapper.WriteLine(validationResult switch
+            {
+                MoveValidationResult.InvalidSrc => "invalid source",
+                MoveValidationResult.InvalidDst => "invalid destination",
+                MoveValidationResult.InvalidMove => "piece can't move that way",
+                MoveValidationResult.InvalidPath => "piece can't jump",
+                MoveValidationResult.Valid => "move valid",
+                _ => throw new NotImplementedException()
+            });
         }
 
         public bool GetMoveConfirmation() =>

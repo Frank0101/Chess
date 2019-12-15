@@ -34,7 +34,8 @@ namespace Chess.Domain.Services
                     {
                         if (game.OnMoveConfirm(game.Board, game.TurnColor, move))
                         {
-                            // apply move here
+                            ApplyMove(game.Board, move);
+                            game.TurnColor = game.TurnColor.Invert();
                         }
                     }
                     else
@@ -51,5 +52,11 @@ namespace Chess.Domain.Services
                 CpuPlayer cpuPlayer => _cpuPlayerService.GetMove(cpuPlayer, board, turnColor),
                 _ => throw new NotImplementedException()
             };
+
+        private static void ApplyMove(Board board, Move move)
+        {
+            board[move.DstRow, move.DstCol] = board[move.SrcRow, move.SrcCol];
+            board[move.SrcRow, move.SrcCol] = null;
+        }
     }
 }
