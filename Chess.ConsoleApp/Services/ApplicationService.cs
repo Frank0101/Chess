@@ -16,7 +16,9 @@ namespace Chess.ConsoleApp.Services
         private readonly IConsoleService _consoleService;
         private readonly IGameService _gameService;
 
-        public ApplicationService(IConsoleService consoleService, IGameService gameService)
+        public ApplicationService(
+            IConsoleService consoleService,
+            IGameService gameService)
         {
             _consoleService = consoleService;
             _gameService = gameService;
@@ -28,13 +30,13 @@ namespace Chess.ConsoleApp.Services
 
             await (_consoleService.GetMainMenuSelection() switch
             {
-                MainMenuSelection.NewGame => HandleNewGame(),
+                MainMenuSelection.NewGame => HandleNewCpuVsCpuGame(),
                 MainMenuSelection.LoadGame => throw new NotImplementedException(),
                 _ => throw new NotImplementedException()
             });
         }
 
-        private async Task HandleNewGame()
+        private async Task HandleNewUserVsCpuGame()
         {
             var (userColor, recursionDepth) = _consoleService.GetNewGameConfig();
 
@@ -78,6 +80,26 @@ namespace Chess.ConsoleApp.Services
                     _consoleService.WaitMoveAcknowledge();
                     return true;
                 });
+
+            await _gameService.RunGame(game);
+        }
+
+        private async Task HandleNewCpuVsCpuGame()
+        {
+            IPlayer whitePlayer = new CpuPlayer(2,
+                recursionLevel =>
+                    _consoleService.DisplayBranchComputed(recursionLevel));
+
+            IPlayer blackPlayer = new CpuPlayer(2,
+                recursionLevel =>
+                    _consoleService.DisplayBranchComputed(recursionLevel));
+
+            var game = new Game(whitePlayer, blackPlayer,
+                (board, turnColor) =>
+                {
+                    _consoleService.DisplayBoard(board, PiecesColor.White);
+                },
+                (board, turnColor, move) => true);
 
             await _gameService.RunGame(game);
         }

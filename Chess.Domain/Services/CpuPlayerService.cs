@@ -15,8 +15,6 @@ namespace Chess.Domain.Services
         private const int ChessMateValue = 99;
         private const int MaxDegreeOfParallelism = 4;
         private const int MaxNotifiableLevel = 1;
-
-        private readonly ParallelOptions _parallelOptions;
         private readonly Random _random = new Random();
 
         private readonly IMoveValidationService _moveValidationService;
@@ -28,11 +26,6 @@ namespace Chess.Domain.Services
         {
             _moveValidationService = moveValidationService;
             _moveExecutionService = moveExecutionService;
-
-            _parallelOptions = new ParallelOptions
-            {
-                MaxDegreeOfParallelism = MaxDegreeOfParallelism
-            };
         }
 
         public Move? GetMove(CpuPlayer player, Board board, PiecesColor turnColor) =>
@@ -41,8 +34,17 @@ namespace Chess.Domain.Services
         private CpuMove? GetBestMove(CpuPlayer player, Board board, PiecesColor turnColor,
             int recursionLevel, int recursionDepth)
         {
+            var parallelOptions = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = recursionLevel == 0
+                    ? MaxDegreeOfParallelism
+                    : 1
+            };
+
             var moves = GetValidMoves(board, turnColor);
-            Parallel.ForEach(moves, _parallelOptions, (move) =>
+            if (!moves.Any()) return null;
+
+            Parallel.ForEach(moves, parallelOptions, (move) =>
             {
                 var tempBoard = new Board(board);
                 _moveExecutionService.Execute(tempBoard, move);
