@@ -151,6 +151,7 @@ namespace Chess.ConsoleApp.Services
             {
                 'y' => true,
                 'n' => false,
+                (char) ConsoleKey.Enter => true,
                 _ => GetMoveConfirmation()
             };
 

@@ -20,9 +20,10 @@ namespace Chess.Domain.Services
                 {
                     if (IsMoveValidForPiece(srcPiece, dstPiece, move))
                     {
-                        return IsMoveValidForPath(board, move)
-                            ? MoveValidationResult.Valid
-                            : MoveValidationResult.InvalidPath;
+                        if (srcPiece is Knight || IsMoveValidForPath(board, move))
+                            return MoveValidationResult.Valid;
+
+                        return MoveValidationResult.InvalidPath;
                     }
 
                     return MoveValidationResult.InvalidMove;
