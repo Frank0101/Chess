@@ -30,7 +30,7 @@ namespace Chess.ConsoleApp.Services
 
             await (_consoleService.GetMainMenuSelection() switch
             {
-                MainMenuSelection.NewGame => HandleNewCpuVsCpuGame(),
+                MainMenuSelection.NewGame => HandleNewUserVsCpuGame(),
                 MainMenuSelection.LoadGame => throw new NotImplementedException(),
                 _ => throw new NotImplementedException()
             });

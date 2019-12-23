@@ -42,6 +42,10 @@ namespace Chess.Domain.Services
                         {
                             _moveExecutionService.Execute(game.Board, move);
                         }
+                        else
+                        {
+                            continue;
+                        }
                     }
                     else
                     {

@@ -34,15 +34,15 @@ namespace Chess.Domain.Services
         private CpuMove? GetBestMove(CpuPlayer player, Board board, PiecesColor turnColor,
             int recursionLevel, int recursionDepth)
         {
+            var moves = GetValidMoves(board, turnColor);
+            if (!moves.Any()) return null;
+
             var parallelOptions = new ParallelOptions
             {
                 MaxDegreeOfParallelism = recursionLevel == 0
                     ? MaxDegreeOfParallelism
                     : 1
             };
-
-            var moves = GetValidMoves(board, turnColor);
-            if (!moves.Any()) return null;
 
             Parallel.ForEach(moves, parallelOptions, (move) =>
             {
