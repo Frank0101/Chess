@@ -1,5 +1,4 @@
 using System;
-using System.Text.RegularExpressions;
 using Chess.ConsoleApp.Enums;
 using Chess.ConsoleApp.Models;
 using Chess.ConsoleApp.Models.Commands;
@@ -119,14 +118,11 @@ namespace Chess.ConsoleApp.Services
 
         public ICommand GetCommand()
         {
-            static bool IsMoveCommand(string moveStr) =>
-                Regex.IsMatch(moveStr, "[a-h][1-8][a-h][1-8]");
-
             _consoleWrapper.Write("command> ");
 
             return _consoleWrapper.ReadLine() switch
             {
-                var input when IsMoveCommand(input) => new MoveCommand(input),
+                var input when MoveCommand.TryParse(input, out var moveCommand) => moveCommand!,
                 "save" => new SaveCommand(),
                 "quit" => new QuitCommand(),
                 _ => GetCommand()

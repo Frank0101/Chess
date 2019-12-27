@@ -5,7 +5,6 @@ using Chess.ConsoleApp.Models.Commands;
 using Chess.ConsoleApp.Services.Interfaces;
 using Chess.Domain.Enums;
 using Chess.Domain.Models;
-using Chess.Domain.Models.Moves;
 using Chess.Domain.Models.Players;
 using Chess.Domain.Services.Interfaces;
 
@@ -44,7 +43,7 @@ namespace Chess.ConsoleApp.Services
                 (board, turnColor) =>
                     _consoleService.GetCommand() switch
                     {
-                        MoveCommand moveCommand => ResolveMoveCommand(moveCommand),
+                        MoveCommand moveCommand => moveCommand.Move,
                         SaveCommand _ => null,
                         QuitCommand _ => null,
                         _ => throw new NotImplementedException()
@@ -103,14 +102,5 @@ namespace Chess.ConsoleApp.Services
         //
         //     await _gameService.RunGame(game);
         // }
-
-        private static Move ResolveMoveCommand(MoveCommand moveCommand)
-        {
-            var (srcRow, srcCol, dstRow, dstCol)
-                = (moveCommand.Value[1] - '1', moveCommand.Value[0] - 'a',
-                    moveCommand.Value[3] - '1', moveCommand.Value[2] - 'a');
-
-            return new Move(srcRow, srcCol, dstRow, dstCol);
-        }
     }
 }
