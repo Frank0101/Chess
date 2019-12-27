@@ -11,6 +11,6 @@ namespace Chess.Domain.Models.Moves
         }
 
         public override string ToString() =>
-            $"{base.ToString()} -> {Response}";
+            $"{Src}{Dst}({Value}) -> {Response}";
     }
 }

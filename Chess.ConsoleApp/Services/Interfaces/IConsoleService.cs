@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Chess.ConsoleApp.Enums;
 using Chess.ConsoleApp.Models;
 using Chess.ConsoleApp.Models.Commands;
@@ -18,7 +19,10 @@ namespace Chess.ConsoleApp.Services.Interfaces
         ICommand GetCommand();
         void DisplayMoveValidationResult(MoveValidationResult validationResult);
         bool GetMoveConfirmation();
-        void DisplayBranchComputed(int recursionLevel, Move move, TimeSpan time);
+
+        void DisplayBranchComputed(int recursionLevel,
+            List<CpuMove> moves, CpuMove bestMove, TimeSpan time);
+
         void WaitMoveAcknowledge();
     }
 }

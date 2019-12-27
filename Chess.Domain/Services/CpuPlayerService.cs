@@ -76,7 +76,8 @@ namespace Chess.Domain.Services
 
             if (recursionLevel <= MaxNotifiableLevel)
             {
-                player.OnMoveEvaluated(recursionLevel, bestMove, DateTime.Now - startTime);
+                player.OnMoveEvaluated(recursionLevel,
+                    moves, bestMove, DateTime.Now - startTime);
             }
 
             return bestMove;

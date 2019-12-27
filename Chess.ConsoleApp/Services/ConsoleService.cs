@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Chess.ConsoleApp.Enums;
 using Chess.ConsoleApp.Models;
 using Chess.ConsoleApp.Models.Commands;
@@ -76,26 +77,28 @@ namespace Chess.ConsoleApp.Services
                         ? whiteTilesColor
                         : blackTilesColor);
 
+                    var pieceStr = board[row, col]?.ToString()?.ToUpper() ?? " ";
                     if (move != null && (row, col) == move.Src)
                     {
                         _consoleWrapper.SetForegroundColor(srcMoveColor);
-                        _consoleWrapper.Write($" {board[row, col]?.ToString() ?? " "} ");
+                        _consoleWrapper.Write($" {pieceStr} ");
                     }
                     else if (move != null && (row, col) == move.Dst)
                     {
                         _consoleWrapper.SetForegroundColor(dstMoveColor);
                         _consoleWrapper.Write($" * ");
                     }
+                    else if (board[row, col] is {} piece)
+                    {
+                        _consoleWrapper.SetForegroundColor(piece.Color == PiecesColor.White
+                            ? whitePiecesColor
+                            : blackPiecesColor);
+
+                        _consoleWrapper.Write($" {pieceStr} ");
+                    }
                     else
                     {
-                        if (board[row, col] is {} piece)
-                        {
-                            _consoleWrapper.SetForegroundColor(piece.Color == PiecesColor.White
-                                ? whitePiecesColor
-                                : blackPiecesColor);
-                        }
-
-                        _consoleWrapper.Write($" {board[row, col]?.ToString() ?? " "} ");
+                        _consoleWrapper.Write("   ");
                     }
                 }
 
@@ -151,13 +154,24 @@ namespace Chess.ConsoleApp.Services
                 _ => GetMoveConfirmation()
             };
 
-        public void DisplayBranchComputed(int recursionLevel, Move move, TimeSpan time)
+        public void DisplayBranchComputed(int recursionLevel,
+            List<CpuMove> moves, CpuMove bestMove, TimeSpan time)
         {
             switch (recursionLevel)
             {
                 case 0:
                     _consoleWrapper.WriteLine();
-                    _consoleWrapper.WriteLine(move.ToString());
+                    foreach (var move in moves)
+                    {
+                        if (move == bestMove)
+                        {
+                            _consoleWrapper.SetForegroundColor(ConsoleColor.Red);
+                        }
+
+                        _consoleWrapper.WriteLine(move.ToString());
+                        _consoleWrapper.ResetColor();
+                    }
+
                     _consoleWrapper.WriteLine($"elapsed time: {time.TotalSeconds}");
                     break;
                 case 1:
