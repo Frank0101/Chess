@@ -13,7 +13,6 @@ namespace Chess.Domain.Services
     public class CpuPlayerService : ICpuPlayerService
     {
         private const int ChessMateValue = 99;
-        private const int MaxDegreeOfParallelism = 4;
         private const int MaxNotifiableLevel = 1;
         private readonly Random _random = new Random();
 
@@ -34,17 +33,7 @@ namespace Chess.Domain.Services
         private CpuMove? GetBestMove(CpuPlayer player, Board board, PiecesColor turnColor,
             int recursionLevel, int recursionDepth)
         {
-            var moves = GetValidMoves(board, turnColor);
-            if (!moves.Any()) return null;
-
-            var parallelOptions = new ParallelOptions
-            {
-                MaxDegreeOfParallelism = recursionLevel == 0
-                    ? MaxDegreeOfParallelism
-                    : 1
-            };
-
-            Parallel.ForEach(moves, parallelOptions, (move) =>
+            void EvaluateMove(CpuMove move)
             {
                 var tempBoard = new Board(board);
                 _moveExecutionService.Execute(tempBoard, move);
@@ -63,7 +52,23 @@ namespace Chess.Domain.Services
                         move.Value += ChessMateValue;
                     }
                 }
-            });
+            }
+
+            var startTime = DateTime.Now;
+            var moves = GetValidMoves(board, turnColor);
+            if (!moves.Any()) return null;
+
+            if (recursionLevel == 0)
+            {
+                Parallel.ForEach(moves, EvaluateMove);
+            }
+            else
+            {
+                foreach (var move in moves)
+                {
+                    EvaluateMove(move);
+                }
+            }
 
             var bestValue = moves.Max(move => move.Value);
             var bestMoves = moves.Where(move => move.Value == bestValue).ToArray();
@@ -71,7 +76,7 @@ namespace Chess.Domain.Services
 
             if (recursionLevel <= MaxNotifiableLevel)
             {
-                player.OnBranchComputed(recursionLevel);
+                player.OnBranchComputed(recursionLevel, DateTime.Now - startTime);
             }
 
             return bestMove;

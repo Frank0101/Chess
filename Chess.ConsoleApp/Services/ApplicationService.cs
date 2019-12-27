@@ -52,8 +52,8 @@ namespace Chess.ConsoleApp.Services
                     _consoleService.DisplayMoveValidationResult(validationResult));
 
             IPlayer cpuPlayer = new CpuPlayer(recursionDepth,
-                recursionLevel =>
-                    _consoleService.DisplayBranchComputed(recursionLevel));
+                (recursionLevel, time) =>
+                    _consoleService.DisplayBranchComputed(recursionLevel, time));
 
             var (whitePlayer, blackPlayer) = userColor == PiecesColor.White
                 ? (userPlayer, cpuPlayer)

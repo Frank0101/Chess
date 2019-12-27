@@ -151,12 +151,13 @@ namespace Chess.ConsoleApp.Services
                 _ => GetMoveConfirmation()
             };
 
-        public void DisplayBranchComputed(int recursionLevel)
+        public void DisplayBranchComputed(int recursionLevel, TimeSpan time)
         {
             switch (recursionLevel)
             {
                 case 0:
                     _consoleWrapper.WriteLine();
+                    _consoleWrapper.WriteLine($"elapsed time: {time.TotalSeconds}");
                     break;
                 case 1:
                     _consoleWrapper.Write(".");

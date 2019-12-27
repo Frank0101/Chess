@@ -1,3 +1,4 @@
+using System;
 using Chess.ConsoleApp.Enums;
 using Chess.ConsoleApp.Models;
 using Chess.ConsoleApp.Models.Commands;
@@ -17,7 +18,7 @@ namespace Chess.ConsoleApp.Services.Interfaces
         ICommand GetCommand();
         void DisplayMoveValidationResult(MoveValidationResult validationResult);
         bool GetMoveConfirmation();
-        void DisplayBranchComputed(int recursionLevel);
+        void DisplayBranchComputed(int recursionLevel, TimeSpan time);
         void WaitMoveAcknowledge();
     }
 }
