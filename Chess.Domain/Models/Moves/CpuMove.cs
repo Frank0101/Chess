@@ -9,5 +9,8 @@ namespace Chess.Domain.Models.Moves
             : base(srcRow, srcCol, dstRow, dstCol)
         {
         }
+
+        public override string ToString() =>
+            $"{base.ToString()} -> {Response}";
     }
 }
