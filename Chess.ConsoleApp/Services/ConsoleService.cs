@@ -77,12 +77,12 @@ namespace Chess.ConsoleApp.Services
                         ? whiteTilesColor
                         : blackTilesColor);
 
-                    if (move != null && row == move.SrcRow && col == move.SrcCol)
+                    if (move != null && (row, col) == move.Src)
                     {
                         _consoleWrapper.SetForegroundColor(srcMoveColor);
                         _consoleWrapper.Write($" {board[row, col]?.ToString() ?? " "} ");
                     }
-                    else if (move != null && row == move.DstRow && col == move.DstCol)
+                    else if (move != null && (row, col) == move.Dst)
                     {
                         _consoleWrapper.SetForegroundColor(dstMoveColor);
                         _consoleWrapper.Write($" * ");

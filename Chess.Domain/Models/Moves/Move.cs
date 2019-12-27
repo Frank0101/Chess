@@ -2,23 +2,23 @@ namespace Chess.Domain.Models.Moves
 {
     public class Move
     {
-        public int SrcRow { get; }
-        public int SrcCol { get; }
-        public int DstRow { get; }
-        public int DstCol { get; }
-        public int DeltaRow => DstRow - SrcRow;
-        public int DeltaCol => DstCol - SrcCol;
+        public Position Src { get; }
+        public Position Dst { get; }
+        public Position Delta { get; }
+
+        public Move(Position src, Position dst)
+        {
+            Src = src;
+            Dst = dst;
+            Delta = dst - src;
+        }
 
         public Move(int srcRow, int srcCol, int dstRow, int dstCol)
+            : this(new Position(srcRow, srcCol), new Position(dstRow, dstCol))
         {
-            SrcRow = srcRow;
-            SrcCol = srcCol;
-            DstRow = dstRow;
-            DstCol = dstCol;
         }
 
         public override string ToString() =>
-            $"{(char) ('a' + SrcCol)}{SrcRow + 1}"
-            + $"{(char) ('a' + DstCol)}{DstRow + 1}";
+            $"{Src}{Dst}";
     }
 }

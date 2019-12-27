@@ -8,10 +8,12 @@ namespace Chess.Domain.Models
     {
         private readonly Piece?[,] _pieces = new Piece?[8, 8];
 
-        public Piece? this[int row, int col]
+        public Piece? this[int row, int col] => _pieces[row, col];
+
+        public Piece? this[Position pos]
         {
-            get => _pieces[row, col];
-            set => _pieces[row, col] = value;
+            get => _pieces[pos.Row, pos.Col];
+            set => _pieces[pos.Row, pos.Col] = value;
         }
 
         public Board()

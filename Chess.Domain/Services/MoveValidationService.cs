@@ -11,8 +11,8 @@ namespace Chess.Domain.Services
     {
         public MoveValidationResult Validate(Board board, PiecesColor turnColor, Move move)
         {
-            var srcPiece = board[move.SrcRow, move.SrcCol];
-            var dstPiece = board[move.DstRow, move.DstCol];
+            var srcPiece = board[move.Src];
+            var dstPiece = board[move.Dst];
 
             if (srcPiece != null && srcPiece.Color == turnColor)
             {
@@ -52,25 +52,23 @@ namespace Chess.Domain.Services
             var normalisedMove = pawn.Color switch
             {
                 PiecesColor.White => move,
-                PiecesColor.Black => new Move(
-                    7 - move.SrcRow, 7 - move.SrcCol,
-                    7 - move.DstRow, 7 - move.DstCol),
+                PiecesColor.Black => new Move((7, 7) - move.Src, (7, 7) - move.Dst),
                 _ => throw new NotImplementedException()
             };
 
-            if (normalisedMove.DeltaRow > 0)
+            if (normalisedMove.Delta.Row > 0)
             {
-                if (normalisedMove.DeltaCol == 0 && !eating)
+                if (normalisedMove.Delta.Col == 0 && !eating)
                 {
-                    if (normalisedMove.SrcRow == 1 && normalisedMove.DeltaRow < 3
-                        || normalisedMove.DeltaRow == 1)
+                    if (normalisedMove.Src.Row == 1 && normalisedMove.Delta.Row < 3
+                        || normalisedMove.Delta.Row == 1)
                     {
                         return true;
                     }
                 }
-                else if (normalisedMove.DeltaCol != 0 && eating)
+                else if (normalisedMove.Delta.Col != 0 && eating)
                 {
-                    if (Math.Abs(normalisedMove.DeltaCol) == 1 && normalisedMove.DeltaRow == 1)
+                    if (Math.Abs(normalisedMove.Delta.Col) == 1 && normalisedMove.Delta.Row == 1)
                     {
                         return true;
                     }
@@ -81,30 +79,30 @@ namespace Chess.Domain.Services
         }
 
         private static bool IsMoveValidForBishop(Move move) =>
-            Math.Abs(move.DeltaRow) == Math.Abs(move.DeltaCol);
+            Math.Abs(move.Delta.Row) == Math.Abs(move.Delta.Col);
 
         private static bool IsMoveValidForKnight(Move move) =>
-            Math.Abs(move.DeltaRow) == 1 && Math.Abs(move.DeltaCol) == 2
-            || Math.Abs(move.DeltaRow) == 2 && Math.Abs(move.DeltaCol) == 1;
+            Math.Abs(move.Delta.Row) == 1 && Math.Abs(move.Delta.Col) == 2
+            || Math.Abs(move.Delta.Row) == 2 && Math.Abs(move.Delta.Col) == 1;
 
         private static bool IsMoveValidForRook(Move move) =>
-            move.DeltaRow == 0 && move.DeltaCol != 0
-            || move.DeltaRow != 0 && move.DeltaCol == 0;
+            move.Delta.Row == 0 && move.Delta.Col != 0
+            || move.Delta.Row != 0 && move.Delta.Col == 0;
 
         private static bool IsMoveValidForQueen(Move move) =>
             IsMoveValidForBishop(move) || IsMoveValidForRook(move);
 
         private static bool IsMoveValidForKing(Move move) =>
-            Math.Abs(move.DeltaRow) < 2 && Math.Abs(move.DeltaCol) < 2;
+            Math.Abs(move.Delta.Row) < 2 && Math.Abs(move.Delta.Col) < 2;
 
         private static bool IsMoveValidForPath(Board board, Move move)
         {
-            var (incRow, incCol) = (Math.Sign(move.DeltaRow), Math.Sign(move.DeltaCol));
+            var (incRow, incCol) = (Math.Sign(move.Delta.Row), Math.Sign(move.Delta.Col));
 
             if (incCol != 0)
             {
-                var row = move.SrcRow + incRow;
-                for (var col = move.SrcCol + incCol; col != move.DstCol; col += incCol)
+                var row = move.Src.Row + incRow;
+                for (var col = move.Src.Col + incCol; col != move.Dst.Col; col += incCol)
                 {
                     if (board[row, col] != null)
                     {
@@ -116,9 +114,9 @@ namespace Chess.Domain.Services
             }
             else
             {
-                for (var row = move.SrcRow + incRow; row != move.DstRow; row += incRow)
+                for (var row = move.Src.Row + incRow; row != move.Dst.Row; row += incRow)
                 {
-                    if (board[row, move.SrcCol] != null)
+                    if (board[row, move.Src.Col] != null)
                     {
                         return false;
                     }

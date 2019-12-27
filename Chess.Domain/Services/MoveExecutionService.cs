@@ -8,8 +8,8 @@ namespace Chess.Domain.Services
     {
         public void Execute(Board board, Move move)
         {
-            board[move.DstRow, move.DstCol] = board[move.SrcRow, move.SrcCol];
-            board[move.SrcRow, move.SrcCol] = null;
+            board[move.Dst] = board[move.Src];
+            board[move.Src] = null;
         }
     }
 }

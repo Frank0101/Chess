@@ -84,25 +84,25 @@ namespace Chess.ConsoleApp.Services
             await _gameService.RunGame(game);
         }
 
-        private async Task HandleNewCpuVsCpuGame()
-        {
-            IPlayer whitePlayer = new CpuPlayer(2,
-                recursionLevel =>
-                    _consoleService.DisplayBranchComputed(recursionLevel));
-
-            IPlayer blackPlayer = new CpuPlayer(2,
-                recursionLevel =>
-                    _consoleService.DisplayBranchComputed(recursionLevel));
-
-            var game = new Game(whitePlayer, blackPlayer,
-                (board, turnColor) =>
-                {
-                    _consoleService.DisplayBoard(board, PiecesColor.White);
-                },
-                (board, turnColor, move) => true);
-
-            await _gameService.RunGame(game);
-        }
+        // private async Task HandleNewCpuVsCpuGame()
+        // {
+        //     IPlayer whitePlayer = new CpuPlayer(2,
+        //         recursionLevel =>
+        //             _consoleService.DisplayBranchComputed(recursionLevel));
+        //
+        //     IPlayer blackPlayer = new CpuPlayer(2,
+        //         recursionLevel =>
+        //             _consoleService.DisplayBranchComputed(recursionLevel));
+        //
+        //     var game = new Game(whitePlayer, blackPlayer,
+        //         (board, turnColor) =>
+        //         {
+        //             _consoleService.DisplayBoard(board, PiecesColor.White);
+        //         },
+        //         (board, turnColor, move) => true);
+        //
+        //     await _gameService.RunGame(game);
+        // }
 
         private static Move ResolveMoveCommand(MoveCommand moveCommand)
         {
