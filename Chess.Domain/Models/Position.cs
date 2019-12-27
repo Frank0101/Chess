@@ -2,7 +2,7 @@ using System;
 
 namespace Chess.Domain.Models
 {
-    public class Position
+    public struct Position
     {
         public int Row { get; }
         public int Col { get; }
@@ -27,16 +27,16 @@ namespace Chess.Domain.Models
             HashCode.Combine(Row, Col);
 
         public static bool operator ==(Position pos1, Position pos2) =>
-            pos1?.Row == pos2?.Row && pos1?.Col == pos2?.Col;
+            pos1.Row == pos2.Row && pos1.Col == pos2.Col;
 
         public static bool operator !=(Position pos1, Position pos2) =>
-            pos1?.Row != pos2?.Row || pos1?.Col != pos2?.Col;
+            pos1.Row != pos2.Row || pos1.Col != pos2.Col;
 
         public static bool operator ==((int row, int col) pos1, Position pos2) =>
-            pos1.row == pos2?.Row && pos1.col == pos2?.Col;
+            pos1.row == pos2.Row && pos1.col == pos2.Col;
 
         public static bool operator !=((int row, int col) pos1, Position pos2) =>
-            pos1.row != pos2?.Row || pos1.col != pos2?.Col;
+            pos1.row != pos2.Row || pos1.col != pos2.Col;
 
         public static Position operator +(Position pos1, Position pos2) =>
             new Position(pos1.Row + pos2.Row, pos1.Col + pos2.Col);
