@@ -87,12 +87,14 @@ namespace Chess.ConsoleApp.Services
         // private async Task HandleNewCpuVsCpuGame()
         // {
         //     IPlayer whitePlayer = new CpuPlayer(2,
-        //         recursionLevel =>
-        //             _consoleService.DisplayBranchComputed(recursionLevel));
+        //         (recursionLevel, moves, bestMove, time) =>
+        //             _consoleService.DisplayBranchComputed(recursionLevel,
+        //                 moves, bestMove, time));
         //
         //     IPlayer blackPlayer = new CpuPlayer(2,
-        //         recursionLevel =>
-        //             _consoleService.DisplayBranchComputed(recursionLevel));
+        //         (recursionLevel, moves, bestMove, time) =>
+        //             _consoleService.DisplayBranchComputed(recursionLevel,
+        //                 moves, bestMove, time));
         //
         //     var game = new Game(whitePlayer, blackPlayer,
         //         (board, turnColor) =>
