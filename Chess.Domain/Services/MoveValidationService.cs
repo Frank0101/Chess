@@ -21,7 +21,11 @@ namespace Chess.Domain.Services
                     if (IsMoveValidForPiece(srcPiece, dstPiece, move))
                     {
                         if (srcPiece is Knight || IsMoveValidForPath(board, move))
-                            return MoveValidationResult.Valid;
+                        {
+                            return !IsKingUnderCheck(board, turnColor, move)
+                                ? MoveValidationResult.Valid
+                                : MoveValidationResult.KingUnderCheck;
+                        }
 
                         return MoveValidationResult.InvalidPath;
                     }
@@ -141,6 +145,15 @@ namespace Chess.Domain.Services
             }
 
             return true;
+        }
+
+        private bool IsKingUnderCheck(Board board, PiecesColor turnColor, Move move)
+        {
+            var tempBoard = new Board(board);
+            tempBoard.ApplyMove(move);
+
+            return IsPositionUnderCheck(tempBoard, turnColor.Invert(),
+                tempBoard.KingPositions[turnColor]);
         }
     }
 }

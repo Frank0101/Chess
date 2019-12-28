@@ -6,6 +6,7 @@ namespace Chess.Domain.Enums
         InvalidDst,
         InvalidMove,
         InvalidPath,
+        KingUnderCheck,
         Valid
     }
 }

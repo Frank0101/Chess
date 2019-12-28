@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Text;
 using Chess.Domain.Enums;
+using Chess.Domain.Models.Moves;
 using Chess.Domain.Models.Pieces;
 
 namespace Chess.Domain.Models
@@ -13,8 +15,10 @@ namespace Chess.Domain.Models
         public Piece? this[Position pos]
         {
             get => _pieces[pos.Row, pos.Col];
-            set => _pieces[pos.Row, pos.Col] = value;
+            private set => _pieces[pos.Row, pos.Col] = value;
         }
+
+        public Dictionary<PiecesColor, Position> KingPositions { get; }
 
         public Board()
         {
@@ -61,6 +65,12 @@ namespace Chess.Domain.Models
                     }
                 }
             }
+
+            KingPositions = new Dictionary<PiecesColor, Position>
+            {
+                {PiecesColor.White, new Position(0, 4)},
+                {PiecesColor.Black, new Position(7, 4)}
+            };
         }
 
         public Board(Board board)
@@ -72,6 +82,23 @@ namespace Chess.Domain.Models
                     _pieces[row, col] = board[row, col];
                 }
             }
+
+            KingPositions = new Dictionary<PiecesColor, Position>
+            {
+                {PiecesColor.White, board.KingPositions[PiecesColor.White]},
+                {PiecesColor.Black, board.KingPositions[PiecesColor.Black]}
+            };
+        }
+
+        public void ApplyMove(Move move)
+        {
+            if (this[move.Src] is King king)
+            {
+                KingPositions[king.Color] = move.Dst;
+            }
+
+            this[move.Dst] = this[move.Src];
+            this[move.Src] = null;
         }
 
         public override string ToString()

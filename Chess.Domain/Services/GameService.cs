@@ -12,16 +12,13 @@ namespace Chess.Domain.Services
     {
         private readonly IUserPlayerService _userPlayerService;
         private readonly ICpuPlayerService _cpuPlayerService;
-        private readonly IMoveExecutionService _moveExecutionService;
 
         public GameService(
             IUserPlayerService userPlayerService,
-            ICpuPlayerService cpuPlayerService,
-            IMoveExecutionService moveExecutionService)
+            ICpuPlayerService cpuPlayerService)
         {
             _userPlayerService = userPlayerService;
             _cpuPlayerService = cpuPlayerService;
-            _moveExecutionService = moveExecutionService;
         }
 
         public async Task RunGame(Game game) =>
@@ -40,7 +37,7 @@ namespace Chess.Domain.Services
                     {
                         if (game.OnMoveConfirm(game.Board, game.TurnColor, move))
                         {
-                            _moveExecutionService.Execute(game.Board, move);
+                            game.Board.ApplyMove(move);
                         }
                         else
                         {

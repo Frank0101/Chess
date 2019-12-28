@@ -17,14 +17,11 @@ namespace Chess.Domain.Services
         private readonly Random _random = new Random();
 
         private readonly IMoveValidationService _moveValidationService;
-        private readonly IMoveExecutionService _moveExecutionService;
 
         public CpuPlayerService(
-            IMoveValidationService moveValidationService,
-            IMoveExecutionService moveExecutionService)
+            IMoveValidationService moveValidationService)
         {
             _moveValidationService = moveValidationService;
-            _moveExecutionService = moveExecutionService;
         }
 
         public Move? GetMove(CpuPlayer player, Board board, PiecesColor turnColor) =>
@@ -36,7 +33,7 @@ namespace Chess.Domain.Services
             void EvaluateMove(CpuMove move)
             {
                 var tempBoard = new Board(board);
-                _moveExecutionService.Execute(tempBoard, move);
+                tempBoard.ApplyMove(move);
 
                 if (recursionLevel < recursionDepth)
                 {
