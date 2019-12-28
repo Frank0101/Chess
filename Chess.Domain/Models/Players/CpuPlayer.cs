@@ -9,7 +9,8 @@ namespace Chess.Domain.Models.Players
         public int RecursionDepth { get; }
         public Action<int, List<CpuMove>, CpuMove, TimeSpan> OnMoveEvaluated { get; }
 
-        public CpuPlayer(int recursionDepth, Action<int, List<CpuMove>, CpuMove, TimeSpan> onMoveEvaluated)
+        public CpuPlayer(int recursionDepth,
+            Action<int, List<CpuMove>, CpuMove, TimeSpan> onMoveEvaluated)
         {
             RecursionDepth = recursionDepth;
             OnMoveEvaluated = onMoveEvaluated;

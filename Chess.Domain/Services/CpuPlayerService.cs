@@ -52,6 +52,11 @@ namespace Chess.Domain.Services
                         move.Value += ChessMateValue;
                     }
                 }
+                else if (_moveValidationService.IsPositionUnderCheck(tempBoard,
+                    turnColor.Invert(), move.Dst))
+                {
+                    move.Value -= tempBoard[move.Dst]?.Value ?? 0;
+                }
             }
 
             var startTime = DateTime.Now;
