@@ -140,6 +140,7 @@ namespace Chess.ConsoleApp.Services
                 MoveValidationResult.InvalidDst => "invalid destination",
                 MoveValidationResult.InvalidMove => "piece can't move that way",
                 MoveValidationResult.InvalidPath => "piece can't jump",
+                MoveValidationResult.KingUnderCheck => "king is under check",
                 MoveValidationResult.Valid => "move valid",
                 _ => throw new NotImplementedException()
             });
