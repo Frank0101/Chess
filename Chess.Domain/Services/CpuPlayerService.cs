@@ -12,7 +12,6 @@ namespace Chess.Domain.Services
 {
     public class CpuPlayerService : ICpuPlayerService
     {
-        private const int ChessMateValue = 99;
         private const int MaxNotifiableLevel = 1;
         private readonly Random _random = new Random();
 
@@ -37,23 +36,22 @@ namespace Chess.Domain.Services
 
                 if (recursionLevel < recursionDepth)
                 {
-                    move.Response = GetBestMove(player, tempBoard, turnColor.Invert(),
+                    var response = GetBestMove(player, tempBoard, turnColor.Invert(),
                         recursionLevel + 1, recursionDepth);
 
-                    if (move.Response != null)
-                    {
-                        move.Value -= move.Response.Value;
-                    }
-                    else
-                    {
-                        move.Value += ChessMateValue;
-                    }
+                    move.Response = response ?? (ICpuMove?) new CpuMoveCheckMate();
                 }
                 else if (_moveValidationService.IsPositionUnderCheck(tempBoard,
                     turnColor.Invert(), move.Dst))
                 {
-                    move.Value -= tempBoard[move.Dst]?.Value ?? 0;
+                    move.Response = new CpuMoveUnderCheck(tempBoard[move.Dst]?.Value ?? 0);
                 }
+                else
+                {
+                    move.Response = new CpuMoveUnknown();
+                }
+
+                move.Value -= move.Response?.Value ?? 0;
             }
 
             var startTime = DateTime.Now;
