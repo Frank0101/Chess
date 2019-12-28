@@ -1,10 +1,10 @@
 namespace Chess.Domain.Models.Moves
 {
-    public class CpuMoveUnderCheck : ICpuMove
+    public class CpuMoveCheck : ICpuMove
     {
         public int Value { get; }
 
-        public CpuMoveUnderCheck(int value)
+        public CpuMoveCheck(int value)
         {
             Value = value;
         }

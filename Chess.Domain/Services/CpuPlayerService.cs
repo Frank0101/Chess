@@ -44,7 +44,7 @@ namespace Chess.Domain.Services
                 else if (_moveValidationService.IsPositionUnderCheck(tempBoard,
                     turnColor.Invert(), move.Dst))
                 {
-                    move.Response = new CpuMoveUnderCheck(tempBoard[move.Dst]?.Value ?? 0);
+                    move.Response = new CpuMoveCheck(tempBoard[move.Dst]?.Value ?? 0);
                 }
                 else
                 {
