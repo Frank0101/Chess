@@ -14,7 +14,9 @@ namespace Chess.Domain.Models.Moves
         }
 
         public Move(int srcRow, int srcCol, int dstRow, int dstCol)
-            : this(new Position(srcRow, srcCol), new Position(dstRow, dstCol))
+            : this(
+                new Position(srcRow, srcCol),
+                new Position(dstRow, dstCol))
         {
         }
 

@@ -1,6 +1,6 @@
 namespace Chess.Domain.Models.Moves
 {
-    public class CpuMoveUnknown : ICpuMove
+    public class CpuMoveUnknown : ICpuMoveResponse
     {
         public int Value => 0;
 

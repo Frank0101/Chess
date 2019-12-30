@@ -1,6 +1,6 @@
 namespace Chess.Domain.Models.Moves
 {
-    public class CpuMoveCheck : ICpuMove
+    public class CpuMoveCheck : ICpuMoveResponse
     {
         public int Value { get; }
 

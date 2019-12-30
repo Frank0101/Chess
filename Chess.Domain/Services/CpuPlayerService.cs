@@ -39,7 +39,7 @@ namespace Chess.Domain.Services
                     var response = GetBestMove(player, tempBoard, turnColor.Invert(),
                         recursionLevel + 1, recursionDepth);
 
-                    move.Response = response ?? (ICpuMove?) new CpuMoveCheckMate();
+                    move.Response = response ?? (ICpuMoveResponse?) new CpuMoveCheckMate();
                 }
                 else if (_moveValidationService.IsPositionUnderCheck(tempBoard,
                     turnColor.Invert(), move.Dst))

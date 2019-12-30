@@ -1,6 +1,6 @@
 namespace Chess.Domain.Models.Moves
 {
-    public interface ICpuMove
+    public interface ICpuMoveResponse
     {
         int Value { get; }
     }

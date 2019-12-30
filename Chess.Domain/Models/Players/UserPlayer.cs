@@ -9,7 +9,8 @@ namespace Chess.Domain.Models.Players
         public Func<Board, PiecesColor, Move?> OnMoveRequest { get; }
         public Action<Move?, MoveValidationResult> OnMoveValidated { get; }
 
-        public UserPlayer(Func<Board, PiecesColor, Move?> onMoveRequest,
+        public UserPlayer(
+            Func<Board, PiecesColor, Move?> onMoveRequest,
             Action<Move?, MoveValidationResult> onMoveValidated)
         {
             OnMoveRequest = onMoveRequest;
