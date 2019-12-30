@@ -7,6 +7,6 @@ namespace Chess.Domain.Services.Interfaces
     public interface IMoveValidationService
     {
         MoveValidationResult Validate(Board board, PiecesColor turnColor, Move move);
-        bool IsPositionUnderCheck(Board board, PiecesColor turnColor, Position position);
+        bool IsPositionUnderCheck(Board board, PiecesColor turnColor, Position pos);
     }
 }

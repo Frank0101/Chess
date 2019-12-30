@@ -87,24 +87,21 @@ namespace Chess.Domain.Services
         {
             var validMoves = new List<CpuMove>();
 
-            for (var srcRow = 0; srcRow < 8; srcRow++)
+            foreach (var (_, srcPos) in board.PiecesPositions[turnColor])
             {
-                for (var srcCol = 0; srcCol < 8; srcCol++)
+                for (var dstRow = 0; dstRow < 8; dstRow++)
                 {
-                    for (var dstRow = 0; dstRow < 8; dstRow++)
+                    for (var dstCol = 0; dstCol < 8; dstCol++)
                     {
-                        for (var dstCol = 0; dstCol < 8; dstCol++)
+                        var move = new CpuMove(srcPos, new Position(dstRow, dstCol))
                         {
-                            var move = new CpuMove(srcRow, srcCol, dstRow, dstCol)
-                            {
-                                Value = board[dstRow, dstCol]?.Value ?? 0
-                            };
+                            Value = board[dstRow, dstCol]?.Value ?? 0
+                        };
 
-                            if (_moveValidationService.Validate(board, turnColor, move)
-                                == MoveValidationResult.Valid)
-                            {
-                                validMoves.Add(move);
-                            }
+                        if (_moveValidationService.Validate(board, turnColor, move)
+                            == MoveValidationResult.Valid)
+                        {
+                            validMoves.Add(move);
                         }
                     }
                 }

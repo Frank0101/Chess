@@ -39,17 +39,14 @@ namespace Chess.Domain.Services
             return MoveValidationResult.InvalidSrc;
         }
 
-        public bool IsPositionUnderCheck(Board board, PiecesColor turnColor, Position position)
+        public bool IsPositionUnderCheck(Board board, PiecesColor turnColor, Position pos)
         {
-            for (var srcRow = 0; srcRow < 8; srcRow++)
+            foreach (var (_, srcPos) in board.PiecesPositions[turnColor])
             {
-                for (var srcCol = 0; srcCol < 8; srcCol++)
+                var move = new Move(srcPos, pos);
+                if (Validate(board, turnColor, move) == MoveValidationResult.Valid)
                 {
-                    var move = new Move(new Position(srcRow, srcCol), position);
-                    if (Validate(board, turnColor, move) == MoveValidationResult.Valid)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 

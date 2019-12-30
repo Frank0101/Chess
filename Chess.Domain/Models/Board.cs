@@ -19,6 +19,7 @@ namespace Chess.Domain.Models
         }
 
         public Dictionary<PiecesColor, Position> KingPositions { get; }
+        public Dictionary<PiecesColor, Dictionary<Piece, Position>> PiecesPositions { get; }
 
         public Board()
         {
@@ -71,6 +72,24 @@ namespace Chess.Domain.Models
                 {PiecesColor.White, new Position(0, 4)},
                 {PiecesColor.Black, new Position(7, 4)}
             };
+
+            PiecesPositions = new Dictionary<PiecesColor, Dictionary<Piece, Position>>
+            {
+                {PiecesColor.White, new Dictionary<Piece, Position>()},
+                {PiecesColor.Black, new Dictionary<Piece, Position>()}
+            };
+
+            for (var row = 0; row < 8; row++)
+            {
+                for (var col = 0; col < 8; col++)
+                {
+                    var piece = _pieces[row, col];
+                    if (piece != null)
+                    {
+                        PiecesPositions[piece.Color].Add(piece, new Position(row, col));
+                    }
+                }
+            }
         }
 
         public Board(Board board)
@@ -88,17 +107,46 @@ namespace Chess.Domain.Models
                 {PiecesColor.White, board.KingPositions[PiecesColor.White]},
                 {PiecesColor.Black, board.KingPositions[PiecesColor.Black]}
             };
+
+            PiecesPositions = new Dictionary<PiecesColor, Dictionary<Piece, Position>>
+            {
+                {PiecesColor.White, new Dictionary<Piece, Position>()},
+                {PiecesColor.Black, new Dictionary<Piece, Position>()}
+            };
+
+            foreach (var (piece, pos) in board.PiecesPositions[PiecesColor.White])
+            {
+                PiecesPositions[PiecesColor.White].Add(piece, pos);
+            }
+
+            foreach (var (piece, pos) in board.PiecesPositions[PiecesColor.Black])
+            {
+                PiecesPositions[PiecesColor.Black].Add(piece, pos);
+            }
         }
 
         public void ApplyMove(Move move)
         {
-            if (this[move.Src] is King king)
-            {
-                KingPositions[king.Color] = move.Dst;
-            }
+            var srcPiece = this[move.Src];
+            var dstPiece = this[move.Dst];
 
-            this[move.Dst] = this[move.Src];
-            this[move.Src] = null;
+            if (srcPiece != null)
+            {
+                if (srcPiece is King king)
+                {
+                    KingPositions[king.Color] = move.Dst;
+                }
+
+                PiecesPositions[srcPiece.Color][srcPiece] = move.Dst;
+
+                if (dstPiece != null)
+                {
+                    PiecesPositions[dstPiece.Color].Remove(dstPiece);
+                }
+
+                this[move.Dst] = this[move.Src];
+                this[move.Src] = null;
+            }
         }
 
         public override string ToString()
