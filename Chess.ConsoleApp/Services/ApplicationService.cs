@@ -29,7 +29,9 @@ namespace Chess.ConsoleApp.Services
 
             await (_consoleService.GetMainMenuSelection() switch
             {
-                MainMenuSelection.NewGame => HandleNewUserVsCpuGame(),
+                //MainMenuSelection.NewGame => HandleNewUserVsCpuGame(),
+                MainMenuSelection.NewGame => HandleNewUserVsUserGame(),
+                //MainMenuSelection.NewGame => HandleNewCpuVsCpuGame(),
                 MainMenuSelection.LoadGame => throw new NotImplementedException(),
                 _ => throw new NotImplementedException()
             });
@@ -84,26 +86,67 @@ namespace Chess.ConsoleApp.Services
             await _gameService.RunGame(game);
         }
 
-        // private async Task HandleNewCpuVsCpuGame()
-        // {
-        //     IPlayer whitePlayer = new CpuPlayer(2,
-        //         (recursionLevel, moves, bestMove, time) =>
-        //             _consoleService.DisplayBranchComputed(recursionLevel,
-        //                 moves, bestMove, time));
-        //
-        //     IPlayer blackPlayer = new CpuPlayer(2,
-        //         (recursionLevel, moves, bestMove, time) =>
-        //             _consoleService.DisplayBranchComputed(recursionLevel,
-        //                 moves, bestMove, time));
-        //
-        //     var game = new Game(whitePlayer, blackPlayer,
-        //         (board, turnColor) =>
-        //         {
-        //             _consoleService.DisplayBoard(board, PiecesColor.White);
-        //         },
-        //         (board, turnColor, move) => true);
-        //
-        //     await _gameService.RunGame(game);
-        // }
+        private async Task HandleNewUserVsUserGame()
+        {
+            IPlayer whitePlayer = new UserPlayer(
+                (board, turnColor) =>
+                    _consoleService.GetCommand() switch
+                    {
+                        MoveCommand moveCommand => moveCommand.Move,
+                        SaveCommand _ => null,
+                        QuitCommand _ => null,
+                        _ => throw new NotImplementedException()
+                    },
+                (move, validationResult) =>
+                    _consoleService.DisplayMoveValidationResult(validationResult));
+
+            IPlayer blackPlayer = new UserPlayer(
+                (board, turnColor) =>
+                    _consoleService.GetCommand() switch
+                    {
+                        MoveCommand moveCommand => moveCommand.Move,
+                        SaveCommand _ => null,
+                        QuitCommand _ => null,
+                        _ => throw new NotImplementedException()
+                    },
+                (move, validationResult) =>
+                    _consoleService.DisplayMoveValidationResult(validationResult));
+
+            var game = new Game(whitePlayer, blackPlayer,
+                (board, turnColor) =>
+                {
+                    _consoleService.DisplayBoard(board, turnColor);
+                    _consoleService.DisplayCommandsMenu();
+                },
+                (board, turnColor, move) =>
+                {
+                    _consoleService.DisplayBoard(board, turnColor, move);
+                    return _consoleService.GetMoveConfirmation();
+                });
+
+            await _gameService.RunGame(game);
+        }
+
+        private async Task HandleNewCpuVsCpuGame()
+        {
+            IPlayer whitePlayer = new CpuPlayer(2,
+                (recursionLevel, moves, bestMove, time) =>
+                    _consoleService.DisplayBranchComputed(recursionLevel,
+                        moves, bestMove, time));
+
+            IPlayer blackPlayer = new CpuPlayer(2,
+                (recursionLevel, moves, bestMove, time) =>
+                    _consoleService.DisplayBranchComputed(recursionLevel,
+                        moves, bestMove, time));
+
+            var game = new Game(whitePlayer, blackPlayer,
+                (board, turnColor) =>
+                {
+                    _consoleService.DisplayBoard(board, PiecesColor.White);
+                },
+                (board, turnColor, move) => true);
+
+            await _gameService.RunGame(game);
+        }
     }
 }
