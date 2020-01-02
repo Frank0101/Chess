@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Chess.Domain.Enums;
@@ -16,11 +15,14 @@ namespace Chess.Domain.Services
         private readonly Random _random = new Random();
 
         private readonly IMoveValidationService _moveValidationService;
+        private readonly IMoveEvaluationService _moveEvaluationService;
 
         public CpuPlayerService(
-            IMoveValidationService moveValidationService)
+            IMoveValidationService moveValidationService,
+            IMoveEvaluationService moveEvaluationService)
         {
             _moveValidationService = moveValidationService;
+            _moveEvaluationService = moveEvaluationService;
         }
 
         public Move? GetMove(CpuPlayer player, Board board, PiecesColor turnColor) =>
@@ -55,7 +57,7 @@ namespace Chess.Domain.Services
             }
 
             var startTime = DateTime.Now;
-            var moves = GetValidMoves(board, turnColor);
+            var moves = _moveEvaluationService.GetValidCpuMoves(board, turnColor);
             if (!moves.Any()) return null;
 
             if (recursionLevel == 0)
@@ -81,33 +83,6 @@ namespace Chess.Domain.Services
             }
 
             return bestMove;
-        }
-
-        private List<CpuMove> GetValidMoves(Board board, PiecesColor turnColor)
-        {
-            var validMoves = new List<CpuMove>();
-
-            foreach (var (_, srcPos) in board.PiecesPositions[turnColor])
-            {
-                for (var dstRow = 0; dstRow < 8; dstRow++)
-                {
-                    for (var dstCol = 0; dstCol < 8; dstCol++)
-                    {
-                        var move = new CpuMove(srcPos, new Position(dstRow, dstCol))
-                        {
-                            Value = board[dstRow, dstCol]?.Value ?? 0
-                        };
-
-                        if (_moveValidationService.Validate(board, turnColor, move)
-                            == MoveValidationResult.Valid)
-                        {
-                            validMoves.Add(move);
-                        }
-                    }
-                }
-            }
-
-            return validMoves;
         }
     }
 }

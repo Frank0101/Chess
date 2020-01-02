@@ -7,6 +7,9 @@ namespace Chess.Domain.Models
         public int Row { get; }
         public int Col { get; }
 
+        public bool IsInRange =>
+            Row >= 0 && Row < 8 && Col >= 0 && Col < 8;
+
         public Position(int row, int col)
         {
             Row = row;
