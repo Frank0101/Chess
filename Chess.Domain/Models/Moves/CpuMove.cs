@@ -12,7 +12,7 @@ namespace Chess.Domain.Models.Moves
 
         public override string ToString() =>
             $"{Src}{Dst}({Value})" + (Response != null
-                ? " -> {Response}"
+                ? $" -> {Response}"
                 : "");
     }
 }

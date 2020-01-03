@@ -5,6 +5,7 @@ namespace Chess.Domain.Models.Moves
         public Position Src { get; }
         public Position Dst { get; }
         public Position Delta { get; }
+        public Move? Next { get; set; }
 
         public Move(Position src, Position dst)
         {
@@ -21,6 +22,8 @@ namespace Chess.Domain.Models.Moves
         }
 
         public override string ToString() =>
-            $"{Src}{Dst}";
+            $"{Src}{Dst}" + (Next != null
+                ? $"+{Next}"
+                : "");
     }
 }
