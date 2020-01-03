@@ -40,6 +40,34 @@ namespace Chess.Domain.Services
             return validMoves;
         }
 
+        //TODO Old logic, for comparison
+        // public List<CpuMove> GetValidCpuMoves(Board board, PiecesColor turnColor)
+        // {
+        //     var validMoves = new List<CpuMove>();
+        //
+        //     foreach (var (_, srcPos) in board.PiecesPositions[turnColor])
+        //     {
+        //         for (var dstRow = 0; dstRow < 8; dstRow++)
+        //         {
+        //             for (var dstCol = 0; dstCol < 8; dstCol++)
+        //             {
+        //                 var move = new CpuMove(srcPos, new Position(dstRow, dstCol))
+        //                 {
+        //                     Value = board[dstRow, dstCol]?.Value ?? 0
+        //                 };
+        //
+        //                 if (_moveValidationService.Validate(board, turnColor, move)
+        //                     == MoveValidationResult.Valid)
+        //                 {
+        //                     validMoves.Add(move);
+        //                 }
+        //             }
+        //         }
+        //     }
+        //
+        //     return validMoves;
+        // }
+
         private static List<Position> GetPotentialDestinations(Piece piece, Position srcPos) =>
             (piece switch
             {
