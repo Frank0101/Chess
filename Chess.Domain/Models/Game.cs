@@ -12,6 +12,8 @@ namespace Chess.Domain.Models
         public IPlayer BlackPlayer { get; }
         public Action<Board, PiecesColor> OnNewTurn { get; }
         public Func<Board, PiecesColor, Move, bool> OnMoveConfirm { get; }
+
+        //TODO Move into Board?
         public PiecesColor TurnColor { get; set; }
 
         public Game(IPlayer whitePlayer, IPlayer blackPlayer,

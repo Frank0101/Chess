@@ -20,6 +20,7 @@ namespace Chess.Domain.Models
 
         public Dictionary<PiecesColor, Position> KingPositions { get; }
         public Dictionary<PiecesColor, Dictionary<Piece, Position>> PiecesPositions { get; }
+        public Dictionary<CastlingPiece, bool> CastlingPiecesTouched { get; }
 
         public Board()
         {
@@ -79,6 +80,8 @@ namespace Chess.Domain.Models
                 {PiecesColor.Black, new Dictionary<Piece, Position>()}
             };
 
+            CastlingPiecesTouched = new Dictionary<CastlingPiece, bool>();
+
             for (var row = 0; row < 8; row++)
             {
                 for (var col = 0; col < 8; col++)
@@ -87,6 +90,11 @@ namespace Chess.Domain.Models
                     if (piece != null)
                     {
                         PiecesPositions[piece.Color].Add(piece, new Position(row, col));
+
+                        if (piece is CastlingPiece castlingPiece)
+                        {
+                            CastlingPiecesTouched.Add(castlingPiece, false);
+                        }
                     }
                 }
             }
@@ -123,6 +131,13 @@ namespace Chess.Domain.Models
             {
                 PiecesPositions[PiecesColor.Black].Add(piece, pos);
             }
+
+            CastlingPiecesTouched = new Dictionary<CastlingPiece, bool>();
+
+            foreach (var (castlingPiece, touched) in CastlingPiecesTouched)
+            {
+                CastlingPiecesTouched.Add(castlingPiece, touched);
+            }
         }
 
         public void ApplyMove(Move move)
@@ -142,6 +157,11 @@ namespace Chess.Domain.Models
                 if (dstPiece != null)
                 {
                     PiecesPositions[dstPiece.Color].Remove(dstPiece);
+                }
+
+                if (srcPiece is CastlingPiece castlingPiece)
+                {
+                    CastlingPiecesTouched[castlingPiece] = true;
                 }
 
                 this[move.Dst] = this[move.Src];
