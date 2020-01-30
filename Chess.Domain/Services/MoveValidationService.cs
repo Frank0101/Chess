@@ -18,16 +18,24 @@ namespace Chess.Domain.Services
             {
                 if (dstPiece == null || dstPiece.Color != turnColor)
                 {
-                    if (IsMoveValidForPiece(srcPiece, dstPiece, move))
+                    if (IsMoveValidForPiece(move, srcPiece, dstPiece != null))
                     {
                         if (srcPiece is Knight || IsMoveValidForPath(board, move))
                         {
-                            return !IsKingUnderCheck(board, turnColor, move)
-                                ? MoveValidationResult.Valid
-                                : MoveValidationResult.KingUnderCheck;
+                            if (!IsKingUnderCheck(board, turnColor, move))
+                            {
+                                return MoveValidationResult.Valid;
+                            }
+
+                            return MoveValidationResult.KingUnderCheck;
                         }
 
                         return MoveValidationResult.InvalidPath;
+                    }
+
+                    if (srcPiece is King king)
+                    {
+                        return ValidateCastling(board, turnColor, move, king);
                     }
 
                     return MoveValidationResult.InvalidMove;
@@ -53,10 +61,10 @@ namespace Chess.Domain.Services
             return false;
         }
 
-        private static bool IsMoveValidForPiece(Piece srcPiece, Piece? dstPiece, Move move) =>
+        private static bool IsMoveValidForPiece(Move move, Piece srcPiece, bool eating) =>
             srcPiece switch
             {
-                Pawn pawn => IsMoveValidForPawn(pawn, move, dstPiece != null),
+                Pawn pawn => IsMoveValidForPawn(move, pawn, eating),
                 Bishop _ => IsMoveValidForBishop(move),
                 Knight _ => IsMoveValidForKnight(move),
                 Rook _ => IsMoveValidForRook(move),
@@ -65,14 +73,11 @@ namespace Chess.Domain.Services
                 _ => throw new NotImplementedException()
             };
 
-        private static bool IsMoveValidForPawn(Pawn pawn, Move move, bool eating)
+        private static bool IsMoveValidForPawn(Move move, Pawn pawn, bool eating)
         {
-            var normalisedMove = pawn.Color switch
-            {
-                PiecesColor.White => move,
-                PiecesColor.Black => new Move((7, 7) - move.Src, (7, 7) - move.Dst),
-                _ => throw new NotImplementedException()
-            };
+            var normalisedMove = pawn.Color == PiecesColor.White
+                ? move
+                : new Move((7, 7) - move.Src, (7, 7) - move.Dst);
 
             if (normalisedMove.Delta.Row > 0)
             {
@@ -150,7 +155,47 @@ namespace Chess.Domain.Services
             tempBoard.ApplyMove(move);
 
             return IsPositionUnderCheck(tempBoard, turnColor.Invert(),
-                tempBoard.KingPositions[turnColor]);
+                tempBoard.KingsPositions[turnColor]);
+        }
+
+        private MoveValidationResult ValidateCastling(Board board, PiecesColor turnColor,
+            Move move, King king)
+        {
+            if (Math.Abs(move.Delta.Row) == 0 && Math.Abs(move.Delta.Col) == 2)
+            {
+                var (incCol, rookCol) = move.Delta.Col > 0
+                    ? (1, 7)
+                    : (-1, 0);
+
+                var rookPos = new Position(move.Src.Row, rookCol);
+                if (board[rookPos] is Rook rook && rook.Color == king.Color)
+                {
+                    if (!board.CastlingPiecesMoved[king] && !board.CastlingPiecesMoved[rook])
+                    {
+                        if (IsMoveValidForPath(board, new Move(move.Src, rookPos)))
+                        {
+                            for (var col = move.Src.Col; col != move.Dst.Col + incCol; col += incCol)
+                            {
+                                var kingPos = new Position(move.Src.Row, col);
+                                if (IsPositionUnderCheck(board, turnColor.Invert(), kingPos))
+                                {
+                                    return MoveValidationResult.KingUnderCheck;
+                                }
+                            }
+
+                            return MoveValidationResult.Valid;
+                        }
+
+                        return MoveValidationResult.InvalidPath;
+                    }
+
+                    return MoveValidationResult.CastlingPiecesAlreadyMoved;
+                }
+
+                return MoveValidationResult.CastlingRookNotInPosition;
+            }
+
+            return MoveValidationResult.InvalidMove;
         }
     }
 }

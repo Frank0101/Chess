@@ -7,6 +7,8 @@ namespace Chess.Domain.Enums
         InvalidMove,
         InvalidPath,
         KingUnderCheck,
+        CastlingRookNotInPosition,
+        CastlingPiecesAlreadyMoved,
         Valid
     }
 }

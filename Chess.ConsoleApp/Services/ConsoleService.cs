@@ -20,15 +20,26 @@ namespace Chess.ConsoleApp.Services
         }
 
         public void DisplayTitle() =>
-            _consoleWrapper.WriteLine("Chess - F.C. 2019");
+            _consoleWrapper.WriteLine("Chess - F.C. 2020");
 
-        public MainMenuSelection GetMainMenuSelection() =>
-            RequestKey("[n]ew game, [l]oad game") switch
+        public MainMenuSelection GetMainMenuSelection()
+        {
+            MainMenuSelection GetMainMenuNewGameSelection() =>
+                RequestKey("[u]ser vs cpu, [U]ser vs user, [c]pu vs cpu") switch
+                {
+                    'u' => MainMenuSelection.NewUserVsCpuGame,
+                    'U' => MainMenuSelection.NewUserVsUserGame,
+                    'c' => MainMenuSelection.NewCpuVsCpuGame,
+                    _ => GetMainMenuNewGameSelection()
+                };
+
+            return RequestKey("[n]ew game, [l]oad game") switch
             {
-                'n' => MainMenuSelection.NewGame,
+                'n' => GetMainMenuNewGameSelection(),
                 'l' => MainMenuSelection.LoadGame,
                 _ => GetMainMenuSelection()
             };
+        }
 
         public NewGameConfig GetNewGameConfig()
         {
@@ -140,7 +151,9 @@ namespace Chess.ConsoleApp.Services
                 MoveValidationResult.InvalidDst => "invalid destination",
                 MoveValidationResult.InvalidMove => "piece can't move that way",
                 MoveValidationResult.InvalidPath => "piece can't jump",
-                MoveValidationResult.KingUnderCheck => "king is under check",
+                MoveValidationResult.KingUnderCheck => "king would be under check",
+                MoveValidationResult.CastlingRookNotInPosition => "no rook in position for castling",
+                MoveValidationResult.CastlingPiecesAlreadyMoved => "castling pieces already moved",
                 MoveValidationResult.Valid => "move valid",
                 _ => throw new NotImplementedException()
             });

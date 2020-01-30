@@ -2,7 +2,9 @@ namespace Chess.ConsoleApp.Enums
 {
     public enum MainMenuSelection
     {
-        NewGame,
+        NewUserVsCpuGame,
+        NewUserVsUserGame,
+        NewCpuVsCpuGame,
         LoadGame
     }
 }

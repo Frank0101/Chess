@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Chess.Domain.Enums;
@@ -18,9 +19,9 @@ namespace Chess.Domain.Models
             private set => _pieces[pos.Row, pos.Col] = value;
         }
 
-        public Dictionary<PiecesColor, Position> KingPositions { get; }
+        public Dictionary<PiecesColor, Position> KingsPositions { get; }
         public Dictionary<PiecesColor, Dictionary<Piece, Position>> PiecesPositions { get; }
-        public Dictionary<CastlingPiece, bool> CastlingPiecesTouched { get; }
+        public Dictionary<CastlingPiece, bool> CastlingPiecesMoved { get; }
 
         public Board()
         {
@@ -68,7 +69,7 @@ namespace Chess.Domain.Models
                 }
             }
 
-            KingPositions = new Dictionary<PiecesColor, Position>
+            KingsPositions = new Dictionary<PiecesColor, Position>
             {
                 {PiecesColor.White, new Position(0, 4)},
                 {PiecesColor.Black, new Position(7, 4)}
@@ -80,7 +81,7 @@ namespace Chess.Domain.Models
                 {PiecesColor.Black, new Dictionary<Piece, Position>()}
             };
 
-            CastlingPiecesTouched = new Dictionary<CastlingPiece, bool>();
+            CastlingPiecesMoved = new Dictionary<CastlingPiece, bool>();
 
             for (var row = 0; row < 8; row++)
             {
@@ -93,7 +94,7 @@ namespace Chess.Domain.Models
 
                         if (piece is CastlingPiece castlingPiece)
                         {
-                            CastlingPiecesTouched.Add(castlingPiece, false);
+                            CastlingPiecesMoved.Add(castlingPiece, false);
                         }
                     }
                 }
@@ -110,10 +111,10 @@ namespace Chess.Domain.Models
                 }
             }
 
-            KingPositions = new Dictionary<PiecesColor, Position>
+            KingsPositions = new Dictionary<PiecesColor, Position>
             {
-                {PiecesColor.White, board.KingPositions[PiecesColor.White]},
-                {PiecesColor.Black, board.KingPositions[PiecesColor.Black]}
+                {PiecesColor.White, board.KingsPositions[PiecesColor.White]},
+                {PiecesColor.Black, board.KingsPositions[PiecesColor.Black]}
             };
 
             PiecesPositions = new Dictionary<PiecesColor, Dictionary<Piece, Position>>
@@ -132,11 +133,11 @@ namespace Chess.Domain.Models
                 PiecesPositions[PiecesColor.Black].Add(piece, pos);
             }
 
-            CastlingPiecesTouched = new Dictionary<CastlingPiece, bool>();
+            CastlingPiecesMoved = new Dictionary<CastlingPiece, bool>();
 
-            foreach (var (castlingPiece, touched) in CastlingPiecesTouched)
+            foreach (var (castlingPiece, touched) in board.CastlingPiecesMoved)
             {
-                CastlingPiecesTouched.Add(castlingPiece, touched);
+                CastlingPiecesMoved.Add(castlingPiece, touched);
             }
         }
 
@@ -149,7 +150,7 @@ namespace Chess.Domain.Models
             {
                 if (srcPiece is King king)
                 {
-                    KingPositions[king.Color] = move.Dst;
+                    KingsPositions[king.Color] = move.Dst;
                 }
 
                 PiecesPositions[srcPiece.Color][srcPiece] = move.Dst;
@@ -161,7 +162,18 @@ namespace Chess.Domain.Models
 
                 if (srcPiece is CastlingPiece castlingPiece)
                 {
-                    CastlingPiecesTouched[castlingPiece] = true;
+                    CastlingPiecesMoved[castlingPiece] = true;
+                }
+
+                if (this[move.Src] is King && Math.Abs(move.Delta.Col) == 2)
+                {
+                    var (incCol, rookCol) = move.Delta.Col > 0
+                        ? (1, 7)
+                        : (-1, 0);
+
+                    var rookPos = new Position(move.Src.Row, rookCol);
+                    var rookMove = new Move(rookPos, (0, incCol) + move.Src);
+                    ApplyMove(rookMove);
                 }
 
                 this[move.Dst] = this[move.Src];

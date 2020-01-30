@@ -40,7 +40,7 @@ namespace Chess.Domain.Services
             return validMoves;
         }
 
-        //TODO Old logic, for comparison
+        //TODO Old logic, for reference
         // public List<CpuMove> GetValidCpuMoves(Board board, PiecesColor turnColor)
         // {
         //     var validMoves = new List<CpuMove>();
@@ -51,14 +51,11 @@ namespace Chess.Domain.Services
         //         {
         //             for (var dstCol = 0; dstCol < 8; dstCol++)
         //             {
-        //                 var move = new CpuMove(srcPos, new Position(dstRow, dstCol))
-        //                 {
-        //                     Value = board[dstRow, dstCol]?.Value ?? 0
-        //                 };
-        //
+        //                 var move = new CpuMove(srcPos, new Position(dstRow, dstCol));
         //                 if (_moveValidationService.Validate(board, turnColor, move)
         //                     == MoveValidationResult.Valid)
         //                 {
+        //                     move.Value = board[dstRow, dstCol]?.Value ?? 0;
         //                     validMoves.Add(move);
         //                 }
         //             }
@@ -128,7 +125,8 @@ namespace Chess.Domain.Services
             {
                 (1, -1) + srcPos, (1, 0) + srcPos, (1, 1) + srcPos,
                 (0, -1) + srcPos, (0, 1) + srcPos,
-                (-1, -1) + srcPos, (-1, 0) + srcPos, (-1, 1) + srcPos
+                (-1, -1) + srcPos, (-1, 0) + srcPos, (-1, 1) + srcPos,
+                (0, -2) + srcPos, (0, 2) + srcPos,
             };
     }
 }
