@@ -165,7 +165,7 @@ namespace Chess.Domain.Models
                     CastlingPiecesMoved[castlingPiece] = true;
                 }
 
-                if (this[move.Src] is King && Math.Abs(move.Delta.Col) == 2)
+                if (srcPiece is King && Math.Abs(move.Delta.Col) == 2)
                 {
                     var (incCol, rookCol) = move.Delta.Col > 0
                         ? (1, 7)
