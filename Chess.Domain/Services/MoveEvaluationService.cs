@@ -25,45 +25,19 @@ namespace Chess.Domain.Services
 
             foreach (var (piece, srcPos) in board.PiecesPositions[turnColor])
             {
-                foreach (var dstPos in GetPotentialDestinations(piece, srcPos))
+                foreach (var move in GetPotentialDestinations(piece, srcPos)
+                    .Select(dstPos => new CpuMove(srcPos, dstPos))
+                    .Where(move =>
+                        _moveValidationService.Validate(board, turnColor, move)
+                        == MoveValidationResult.Valid))
                 {
-                    var move = new CpuMove(srcPos, dstPos);
-                    if (_moveValidationService.Validate(board, turnColor, move)
-                        == MoveValidationResult.Valid)
-                    {
-                        move.Value = board[dstPos]?.Value ?? 0;
-                        validMoves.Add(move);
-                    }
+                    move.Value = EvaluateMoveValue(board, move);
+                    validMoves.Add(move);
                 }
             }
 
             return validMoves;
         }
-
-        //TODO Old logic, for reference
-        // public List<CpuMove> GetValidCpuMoves(Board board, PiecesColor turnColor)
-        // {
-        //     var validMoves = new List<CpuMove>();
-        //
-        //     foreach (var (_, srcPos) in board.PiecesPositions[turnColor])
-        //     {
-        //         for (var dstRow = 0; dstRow < 8; dstRow++)
-        //         {
-        //             for (var dstCol = 0; dstCol < 8; dstCol++)
-        //             {
-        //                 var move = new CpuMove(srcPos, new Position(dstRow, dstCol));
-        //                 if (_moveValidationService.Validate(board, turnColor, move)
-        //                     == MoveValidationResult.Valid)
-        //                 {
-        //                     move.Value = board[dstRow, dstCol]?.Value ?? 0;
-        //                     validMoves.Add(move);
-        //                 }
-        //             }
-        //         }
-        //     }
-        //
-        //     return validMoves;
-        // }
 
         private static List<Position> GetPotentialDestinations(Piece piece, Position srcPos) =>
             (piece switch
@@ -128,5 +102,8 @@ namespace Chess.Domain.Services
                 (-1, -1) + srcPos, (-1, 0) + srcPos, (-1, 1) + srcPos,
                 (0, -2) + srcPos, (0, 2) + srcPos,
             };
+
+        private static int EvaluateMoveValue(Board board, Move move) =>
+            board[move.Dst]?.Value ?? 0;
     }
 }
