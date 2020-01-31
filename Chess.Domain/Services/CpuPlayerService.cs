@@ -54,6 +54,10 @@ namespace Chess.Domain.Services
                 }
 
                 move.Value -= move.Response?.Value ?? 0;
+                if (recursionLevel == 0)
+                {
+                    move.Value += EvaluateBoardCoverageValue(tempBoard, turnColor);
+                }
             }
 
             var startTime = DateTime.Now;
@@ -83,6 +87,12 @@ namespace Chess.Domain.Services
             }
 
             return bestMove;
+        }
+
+        private decimal EvaluateBoardCoverageValue(Board board, PiecesColor turnColor)
+        {
+            var coverage = _moveEvaluationService.GetValidCpuMoves(board, turnColor);
+            return Math.Round(0.01m * coverage.Count, 1);
         }
     }
 }

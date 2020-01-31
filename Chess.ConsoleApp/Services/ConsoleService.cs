@@ -181,6 +181,10 @@ namespace Chess.ConsoleApp.Services
                         {
                             _consoleWrapper.SetForegroundColor(ConsoleColor.Red);
                         }
+                        else if (move.Value == bestMove.Value)
+                        {
+                            _consoleWrapper.SetForegroundColor(ConsoleColor.Yellow);
+                        }
 
                         _consoleWrapper.WriteLine(move.ToString());
                         _consoleWrapper.ResetColor();

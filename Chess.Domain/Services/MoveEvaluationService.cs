@@ -103,7 +103,16 @@ namespace Chess.Domain.Services
                 (0, -2) + srcPos, (0, 2) + srcPos,
             };
 
-        private static int EvaluateMoveValue(Board board, Move move) =>
-            board[move.Dst]?.Value ?? 0;
+        private static decimal EvaluateMoveValue(Board board, Move move)
+        {
+            var moveValue = (decimal) (board[move.Dst]?.Value ?? 0);
+
+            if (board[move.Src] is King)
+            {
+                moveValue -= 0.1m;
+            }
+
+            return moveValue;
+        }
     }
 }

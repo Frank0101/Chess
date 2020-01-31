@@ -2,9 +2,9 @@ namespace Chess.Domain.Models.Moves
 {
     public class CpuMoveCheck : ICpuMoveResponse
     {
-        public int Value { get; }
+        public decimal Value { get; }
 
-        public CpuMoveCheck(int value)
+        public CpuMoveCheck(decimal value)
         {
             Value = value;
         }
